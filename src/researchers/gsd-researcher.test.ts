@@ -1,9 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { GSDResearcher } from './gsd-researcher.js';
 import fg from 'fast-glob';
+import { readFile } from 'fs/promises';
 
 // Mock fast-glob
 vi.mock('fast-glob');
+
+// Mock fs/promises
+vi.mock('fs/promises', () => ({
+  readFile: vi.fn(),
+}));
 
 describe('GSDResearcher', () => {
   beforeEach(() => {
@@ -39,9 +45,7 @@ describe('GSDResearcher', () => {
         '/test/project/.planning/PROJECT.md'
       ]);
 
-      // Mock fs.readFile
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile').mockResolvedValue(mockProjectContent);
+      vi.mocked(readFile).mockResolvedValue(mockProjectContent);
 
       const researcher = new GSDResearcher('/test/project');
       const result = await researcher.execute();
@@ -64,8 +68,7 @@ describe('GSDResearcher', () => {
         '/test/projects/proj2/.planning/PROJECT.md'
       ]);
 
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile')
+      vi.mocked(readFile)
         .mockResolvedValueOnce(mockProject1)
         .mockResolvedValueOnce(mockProject2);
 
@@ -110,9 +113,7 @@ describe('GSDResearcher', () => {
       const mockContent = '# My Awesome Project\n\nSome description here.';
 
       vi.mocked(fg).mockResolvedValue(['/test/.planning/PROJECT.md']);
-
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile').mockResolvedValue(mockContent);
+      vi.mocked(readFile).mockResolvedValue(mockContent);
 
       const researcher = new GSDResearcher('/test');
       const result = await researcher.execute();
@@ -127,9 +128,7 @@ describe('GSDResearcher', () => {
       const mockContent = '# Simple Project\n\nNo frontmatter here.';
 
       vi.mocked(fg).mockResolvedValue(['/test/.planning/PROJECT.md']);
-
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile').mockResolvedValue(mockContent);
+      vi.mocked(readFile).mockResolvedValue(mockContent);
 
       const researcher = new GSDResearcher('/test');
       const result = await researcher.execute();
@@ -152,9 +151,7 @@ status: "In Progress"
 Content here.`;
 
       vi.mocked(fg).mockResolvedValue(['/test/.planning/PROJECT.md']);
-
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile').mockResolvedValue(mockContent);
+      vi.mocked(readFile).mockResolvedValue(mockContent);
 
       const researcher = new GSDResearcher('/test');
       const result = await researcher.execute();
@@ -182,9 +179,7 @@ Content here.`;
 - Waiting for review`;
 
       vi.mocked(fg).mockResolvedValue(['/test/.planning/PROJECT.md']);
-
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile')
+      vi.mocked(readFile)
         .mockResolvedValueOnce(mockProject)
         .mockResolvedValueOnce(mockState);
 
@@ -207,9 +202,7 @@ Content here.`;
       const mockProject = '# Test Project';
 
       vi.mocked(fg).mockResolvedValue(['/test/.planning/PROJECT.md']);
-
-      const fs = await import('fs/promises');
-      const readFileSpy = vi.spyOn(fs, 'readFile')
+      vi.mocked(readFile)
         .mockResolvedValueOnce(mockProject)
         .mockRejectedValueOnce(new Error('ENOENT: no such file'));
 
@@ -232,9 +225,7 @@ Content here.`;
 **Progress:** ████░░░░░░░ 4/11 plans complete (36%)`;
 
       vi.mocked(fg).mockResolvedValue(['/test/.planning/PROJECT.md']);
-
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile')
+      vi.mocked(readFile)
         .mockResolvedValueOnce(mockProject)
         .mockResolvedValueOnce(mockState);
 
@@ -259,8 +250,7 @@ Content here.`;
         '/test/proj2/.planning/PROJECT.md'
       ]);
 
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile')
+      vi.mocked(readFile)
         .mockResolvedValueOnce(mockProject1)
         .mockResolvedValueOnce(mockProject2);
 
@@ -293,8 +283,7 @@ Content here.`;
         '/test/proj1/.planning/PROJECT.md'
       ]);
 
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile').mockRejectedValue(new Error('Read failed'));
+      vi.mocked(readFile).mockRejectedValue(new Error('Read failed'));
 
       const researcher = new GSDResearcher('/test');
       const result = await researcher.execute();
@@ -329,9 +318,7 @@ Content here.`;
         '/test/proj2/.planning/PROJECT.md'
       ]);
 
-      const fs = await import('fs/promises');
-      vi.spyOn(fs, 'readFile')
-        .mockResolvedValue('# Project\n');
+      vi.mocked(readFile).mockResolvedValue('# Project\n');
 
       const researcher = new GSDResearcher('/test');
       const result = await researcher.execute();
