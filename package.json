@@ -4,6 +4,12 @@
   "description": "",
   "type": "module",
   "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./config": "./dist/config/index.js",
+    "./state": "./dist/state/index.js",
+    "./utils": "./dist/utils/index.js"
+  },
   "directories": {
     "doc": "docs"
   },
