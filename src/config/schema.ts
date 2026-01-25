@@ -63,3 +63,4 @@ export const OpsConfigSchema = z.object({
 });
 
 export type OpsConfig = z.infer<typeof OpsConfigSchema>;
+export type ADOConfig = z.infer<typeof AzureSchema>;
