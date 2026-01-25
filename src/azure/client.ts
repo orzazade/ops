@@ -1,0 +1,132 @@
+/**
+ * Azure DevOps API client wrapper.
+ * Provides typed access to work items and pull requests.
+ */
+
+import * as azdev from 'azure-devops-node-api';
+import type { IWorkItemTrackingApi } from 'azure-devops-node-api/WorkItemTrackingApi.js';
+import type { IGitApi } from 'azure-devops-node-api/GitApi.js';
+import type { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces.js';
+import type { GitPullRequest, GitRepository } from 'azure-devops-node-api/interfaces/GitInterfaces.js';
+
+export interface ADOClientConfig {
+  organization: string;
+  project: string;
+  pat: string;
+}
+
+/**
+ * Client for interacting with Azure DevOps APIs.
+ * Uses lazy initialization for API clients.
+ */
+export class ADOClient {
+  private connection: azdev.WebApi;
+  private witApi?: IWorkItemTrackingApi;
+  private gitApi?: IGitApi;
+
+  constructor(private config: ADOClientConfig) {
+    const orgUrl = `https://dev.azure.com/${config.organization}`;
+    const authHandler = azdev.getPersonalAccessTokenHandler(config.pat);
+    this.connection = new azdev.WebApi(orgUrl, authHandler);
+  }
+
+  /**
+   * Get work item tracking API instance (lazy initialization).
+   */
+  private async getWorkItemApi(): Promise<IWorkItemTrackingApi> {
+    if (!this.witApi) {
+      this.witApi = await this.connection.getWorkItemTrackingApi();
+    }
+    return this.witApi;
+  }
+
+  /**
+   * Get Git API instance (lazy initialization).
+   */
+  private async getGitApi(): Promise<IGitApi> {
+    if (!this.gitApi) {
+      this.gitApi = await this.connection.getGitApi();
+    }
+    return this.gitApi;
+  }
+
+  /**
+   * Fetch work items assigned to current user that are not closed.
+   */
+  async fetchWorkItems(): Promise<WorkItem[]> {
+    const witApi = await this.getWorkItemApi();
+
+    // WIQL query to get work items assigned to me that aren't closed
+    const wiql = {
+      query: `SELECT [System.Id]
+              FROM WorkItems
+              WHERE [System.AssignedTo] = @Me
+              AND [System.State] NOT IN ('Closed', 'Removed')`,
+    };
+
+    const result = await witApi.queryByWiql(wiql, { project: this.config.project });
+
+    if (!result.workItems || result.workItems.length === 0) {
+      return [];
+    }
+
+    const ids = result.workItems.map(wi => wi.id!);
+
+    // Fetch full work item details with all required fields
+    const workItems = await witApi.getWorkItems(
+      ids,
+      [
+        'System.Id',
+        'System.Title',
+        'System.State',
+        'Microsoft.VSTS.Common.Priority',
+        'System.AssignedTo',
+        'System.CreatedDate',
+        'System.ChangedDate',
+        'System.Tags',
+        'System.IterationPath',
+      ],
+      undefined,
+      undefined,
+      undefined,
+      this.config.project
+    );
+
+    return workItems || [];
+  }
+
+  /**
+   * Fetch active pull requests from all repositories in the project.
+   */
+  async fetchPullRequests(): Promise<GitPullRequest[]> {
+    const gitApi = await this.getGitApi();
+
+    // Get all repositories in the project
+    const repositories = await gitApi.getRepositories(this.config.project);
+
+    if (!repositories || repositories.length === 0) {
+      return [];
+    }
+
+    // Fetch PRs from all repositories
+    const allPRs: GitPullRequest[] = [];
+
+    for (const repo of repositories) {
+      if (!repo.id) continue;
+
+      const prs = await gitApi.getPullRequests(
+        repo.id,
+        {
+          status: 1, // Active PRs only
+        },
+        this.config.project
+      );
+
+      if (prs) {
+        allPRs.push(...prs);
+      }
+    }
+
+    return allPRs;
+  }
+}
