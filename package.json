@@ -8,7 +8,8 @@
     ".": "./dist/index.js",
     "./config": "./dist/config/index.js",
     "./state": "./dist/state/index.js",
-    "./utils": "./dist/utils/index.js"
+    "./utils": "./dist/utils/index.js",
+    "./researchers": "./dist/researchers/index.js"
   },
   "directories": {
     "doc": "docs"
