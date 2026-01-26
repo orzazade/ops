@@ -10,6 +10,7 @@ import type { IWorkApi } from 'azure-devops-node-api/WorkApi.js';
 import type { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces.js';
 import type { GitPullRequest, GitRepository } from 'azure-devops-node-api/interfaces/GitInterfaces.js';
 import type { TeamSettingsIteration } from 'azure-devops-node-api/interfaces/WorkInterfaces.js';
+import type { JsonPatchDocument } from 'azure-devops-node-api/interfaces/common/VSSInterfaces.js';
 
 export interface ADOClientConfig {
   organization: string;
@@ -180,5 +181,72 @@ export class ADOClient {
     }
 
     return allPRs;
+  }
+
+  /**
+   * Update a work item's iteration path (move to different sprint).
+   * Uses JSON Patch Document format as per ADO REST API.
+   *
+   * @param id - Work item ID
+   * @param iterationPath - Full iteration path (e.g., "Project\\Sprint 214")
+   */
+  async updateWorkItem(id: number, iterationPath: string): Promise<void> {
+    const witApi = await this.getWorkItemApi();
+
+    const patchDoc: JsonPatchDocument = [
+      {
+        op: 'add',
+        path: '/fields/System.IterationPath',
+        value: iterationPath,
+      }
+    ];
+
+    await witApi.updateWorkItem(
+      null,              // customHeaders
+      patchDoc,
+      id,
+      this.config.project,
+      false,             // validateOnly
+      false,             // bypassRules
+      true               // suppressNotifications
+    );
+  }
+
+  /**
+   * Get future iterations (sprints) for the team.
+   * Returns iterations that haven't ended yet, sorted by start date.
+   */
+  async getFutureIterations(): Promise<TeamSettingsIteration[]> {
+    if (!this.config.team) {
+      return [];
+    }
+
+    const workApi = await this.getWorkApi();
+    const teamContext = {
+      project: this.config.project,
+      team: this.config.team,
+    };
+
+    // Get all iterations
+    const iterations = await workApi.getTeamIterations(teamContext);
+
+    if (!iterations) {
+      return [];
+    }
+
+    const now = new Date();
+
+    // Filter to future iterations (end date in future or no end date)
+    const future = iterations.filter(iter => {
+      if (!iter.attributes?.finishDate) return true;
+      return new Date(iter.attributes.finishDate) > now;
+    });
+
+    // Sort by start date ascending
+    return future.sort((a, b) => {
+      const aStart = a.attributes?.startDate ? new Date(a.attributes.startDate).getTime() : 0;
+      const bStart = b.attributes?.startDate ? new Date(b.attributes.startDate).getTime() : 0;
+      return aStart - bStart;
+    });
   }
 }
