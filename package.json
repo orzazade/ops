@@ -11,7 +11,8 @@
     "./utils": "./dist/utils/index.js",
     "./researchers": "./dist/researchers/index.js",
     "./context": "./dist/context/index.js",
-    "./triage": "./dist/triage/index.js"
+    "./triage": "./dist/triage/index.js",
+    "./formatters": "./dist/formatters/index.js"
   },
   "directories": {
     "doc": "docs"
