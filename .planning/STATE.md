@@ -6,20 +6,20 @@
 
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
-- **Phase:** 10 (Output Polish) — VERIFIED ✓
-- **Plan:** All plans complete
-- **Status:** Phase 10 verified, ready for Phase 11
-- **Last activity:** 2026-01-26 — Phase 10 verified (9/9 must-haves passed)
+- **Phase:** 11 (Priority Transparency) — IN PROGRESS
+- **Plan:** 03 of 05
+- **Status:** Completed 11-03-PLAN.md (CLI tools and skills for transparency)
+- **Last activity:** 2026-01-26 — Completed 11-03-PLAN.md
 
 **Progress:** [████                ] 1/5 milestone 3 phases complete (20%)
-**Next:** `/gsd:discuss-phase 11`
+**Next:** Continue Phase 11 (11-04-PLAN.md or higher)
 
 ## Milestone 3 Phases
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
 | 10 | Output Polish | UX-01 to UX-07 | Complete |
-| 11 | Priority Transparency | PRI-01 to PRI-05 | Pending |
+| 11 | Priority Transparency | PRI-01 to PRI-05 | In Progress (3/5 plans) |
 | 12 | Sprint Intelligence | SPR-01 to SPR-06 | Pending |
 | 13 | Ticket Research | RSH-01 to RSH-05 | Pending |
 | 14 | Decision Support | DEC-01 to DEC-05 | Pending |
@@ -140,10 +140,25 @@
 - Delta emoji: green new, up arrow changed up, down arrow changed down, dash unchanged
 - EOD blockers use warning emoji for 3+ days (escalation needed), stop sign for < 3 days
 - Leadership tone guidelines for status skill: concise, factual, health indicators first
+- Overrides expire at midnight UTC (not 24 hours from creation) for simpler mental model
+- Re-boosting same item replaces previous override (no stacking allowed)
+- Manual boost/demote rules added to appliedRules array for transparency in score breakdown
+- Override pattern: load → filter expired → apply → save cleaned
+- Map-based O(1) lookup for override application performance
+- Prose format for score explanations (not table) for better readability
+- Top 2 rules for score hints to keep inline display compact
+- Grouped categories for rules display: Priority, People, Age, State
+- Rule name formatting centralized for consistency across explainer and table
+- Score hints use short names (P1, VIP, old) for brevity
+- Custom rule weights persist to ~/.ops/rules.json (separate from config.yaml)
+- Interactive rules editor uses @inquirer/prompts for menu-driven UX
+- Default boost/demote amount is 10 points
+- why-cli fetches live ADO data to show current state
+- Score hints show top 2 rules by absolute weight for brevity
 
 ## Session Continuity
 - **Last session:** 2026-01-26
-- **Stopped at:** Completed 10-02-PLAN.md (skill output formatting)
+- **Stopped at:** Completed 11-03-PLAN.md (CLI tools and skills for transparency)
 - **Resume file:** None
 
 ## Pending TODOs
