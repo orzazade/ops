@@ -85,4 +85,35 @@ describe('TokenBudget', () => {
       expect(error.shortfall).toBe(100); // need 200, have 100 remaining after freeing 50
     });
   });
+
+  describe('deallocate', () => {
+    it('removes existing section and frees tokens', () => {
+      const budget = new TokenBudget(1000);
+      budget.allocate('section1', 300, 5);
+
+      const result = budget.deallocate('section1');
+      expect(result).toBe(true);
+      expect(budget.hasAllocation('section1')).toBe(false);
+      expect(budget.remaining()).toBe(1000);
+    });
+
+    it('returns false for non-existent section', () => {
+      const budget = new TokenBudget(1000);
+      const result = budget.deallocate('nonexistent');
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('getAllocations', () => {
+    it('returns all allocations', () => {
+      const budget = new TokenBudget(1000);
+      budget.allocate('a', 100, 3);
+      budget.allocate('b', 200, 5);
+
+      const allocs = budget.getAllocations();
+      expect(allocs).toHaveLength(2);
+      expect(allocs).toContainEqual({ name: 'a', tokens: 100, priority: 3 });
+      expect(allocs).toContainEqual({ name: 'b', tokens: 200, priority: 5 });
+    });
+  });
 });
