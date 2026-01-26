@@ -30,6 +30,9 @@ export {
 // Project filter exports
 export { filterByProject } from './project-filter.js';
 
+// Response workflow exports
+export { generateResponseDraft } from './respond-workflow.js';
+
 // Type exports
 export type { CarryoverResult } from './types.js';
 export type { MorningWorkflowResult, MorningDataResult } from './morning-workflow.js';
