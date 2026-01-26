@@ -41,6 +41,20 @@ const DEFAULT_STORY_POINTS = 3;
 const OVER_COMMITMENT_THRESHOLD = 120; // percent
 
 /**
+ * Get story points for an item, with default fallback
+ */
+function getItemPoints(item: SprintItem): number {
+  return item.storyPoints ?? DEFAULT_STORY_POINTS;
+}
+
+/**
+ * Calculate total capacity for a set of items
+ */
+function calculateTotalPoints(items: SprintItem[]): number {
+  return items.reduce((sum, item) => sum + getItemPoints(item), 0);
+}
+
+/**
  * Analyze sprint load and determine if over-committed
  *
  * @param items - Sprint items to analyze
@@ -48,9 +62,7 @@ const OVER_COMMITMENT_THRESHOLD = 120; // percent
  * @returns Load analysis with utilization and deferral suggestions
  */
 export function analyzeLoad(items: SprintItem[], capacityPoints: number): LoadAnalysis {
-  const currentCapacity = items.reduce((sum, item) => {
-    return sum + (item.storyPoints ?? DEFAULT_STORY_POINTS);
-  }, 0);
+  const currentCapacity = calculateTotalPoints(items);
 
   const utilizationPercent = capacityPoints === 0 ? 0 : Math.round((currentCapacity / capacityPoints) * 100);
   const isOverCommitted = utilizationPercent > OVER_COMMITMENT_THRESHOLD;
@@ -90,13 +102,11 @@ export function distributeItems(items: SprintItem[], sprintCapacity: number): Di
 
   // Sort by story points descending (First-Fit Decreasing)
   const sortedItems = [...items].sort((a, b) => {
-    const aPoints = a.storyPoints ?? DEFAULT_STORY_POINTS;
-    const bPoints = b.storyPoints ?? DEFAULT_STORY_POINTS;
-    return bPoints - aPoints;
+    return getItemPoints(b) - getItemPoints(a);
   });
 
   for (const item of sortedItems) {
-    const itemPoints = item.storyPoints ?? DEFAULT_STORY_POINTS;
+    const itemPoints = getItemPoints(item);
 
     // Find first sprint with available capacity
     let assignedSprint = sprints.find(sprint => {
@@ -135,10 +145,7 @@ export function distributeItems(items: SprintItem[], sprintCapacity: number): Di
  * @returns Ordered list of deferral suggestions
  */
 export function suggestDeferrals(items: SprintItem[], capacityPoints: number): DeferralSuggestion[] {
-  const currentCapacity = items.reduce((sum, item) => {
-    return sum + (item.storyPoints ?? DEFAULT_STORY_POINTS);
-  }, 0);
-
+  const currentCapacity = calculateTotalPoints(items);
   const utilizationPercent = capacityPoints === 0 ? 0 : (currentCapacity / capacityPoints) * 100;
 
   // Only suggest deferrals if over-committed (>120%)
@@ -162,9 +169,7 @@ export function suggestDeferrals(items: SprintItem[], capacityPoints: number): D
     if (ageDiff !== 0) return ageDiff;
 
     // Sort by size (largest first)
-    const aPoints = a.storyPoints ?? DEFAULT_STORY_POINTS;
-    const bPoints = b.storyPoints ?? DEFAULT_STORY_POINTS;
-    return bPoints - aPoints;
+    return getItemPoints(b) - getItemPoints(a);
   });
 
   // Select items until we cover excess points
@@ -174,7 +179,7 @@ export function suggestDeferrals(items: SprintItem[], capacityPoints: number): D
   for (const item of sortedItems) {
     if (pointsCovered >= excessPoints) break;
 
-    const itemPoints = item.storyPoints ?? DEFAULT_STORY_POINTS;
+    const itemPoints = getItemPoints(item);
     const reason = generateDeferralReason(item);
 
     suggestions.push({
@@ -208,7 +213,7 @@ function generateDeferralReason(item: SprintItem): string {
   }
 
   // Size reason
-  const itemPoints = item.storyPoints ?? DEFAULT_STORY_POINTS;
+  const itemPoints = getItemPoints(item);
   if (itemPoints >= 8) {
     reasons.push(`Large item (${itemPoints} points)`);
   }
