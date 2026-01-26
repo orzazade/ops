@@ -6,6 +6,7 @@ export const GLOBAL_STATE_DIR = path.join(os.homedir(), '.ops');
 export const GLOBAL_HISTORY_DIR = path.join(GLOBAL_STATE_DIR, 'history');
 export const GLOBAL_CACHE_DIR = path.join(GLOBAL_STATE_DIR, 'cache');
 export const GLOBAL_CONFIG_PATH = path.join(GLOBAL_STATE_DIR, 'config.yaml');
+export const EOD_HISTORY_DIR = path.join(GLOBAL_HISTORY_DIR, 'eod');
 
 // Project state (in cwd)
 export const PROJECT_STATE_DIR = '.ops';
