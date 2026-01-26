@@ -66,9 +66,10 @@ export class CodeInvestigator implements Investigator<CodeFindings> {
       description: string;
     }> = [];
 
-    // Extract keywords from context (would normally fetch work item)
-    // For now, we'll prepare generic patterns
-    const keywords = ['class', 'function', 'method']; // Placeholder
+    // Extract keywords from work item if available
+    const keywords = context.workItem
+      ? extractKeywords(context.workItem.title, context.workItem.description)
+      : ['class', 'function', 'method']; // Fallback if no work item
 
     for (const keyword of keywords) {
       // Class definition search

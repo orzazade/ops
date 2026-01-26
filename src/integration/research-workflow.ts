@@ -206,12 +206,13 @@ export class ResearchWorkflow {
         `[ResearchWorkflow] Available repos: ${availableRepoPaths.length}, cloned: ${reposCloned.length}`
       );
 
-      // Create investigation context
+      // Create investigation context with workItem for keyword extraction
       const context: InvestigationContext = {
         ticketId: this.config.ticketId,
         project: this.config.project,
         organization: this.config.organization,
         repoPaths: availableRepoPaths,
+        workItem,
       };
 
       // Create investigators

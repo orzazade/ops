@@ -9,6 +9,8 @@ export interface InvestigationContext {
   project: string;
   organization: string;
   repoPaths: string[];
+  /** Work item data for keyword extraction (optional, populated by workflow) */
+  workItem?: WorkItemWithRelations;
 }
 
 /**
