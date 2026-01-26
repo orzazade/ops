@@ -12,3 +12,4 @@ export * from './emoji.js';
 export * from './utils.js';
 export * from './table.js';
 export * from './section.js';
+export * from './score-explainer.js';
