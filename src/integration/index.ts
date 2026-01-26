@@ -21,6 +21,17 @@ export {
   determineBriefingTier,
 } from './morning-workflow.js';
 
+// Status workflow exports
+export {
+  gatherProjectStatus,
+  determineStatusTier,
+} from './status-workflow.js';
+
+// Project filter exports
+export { filterByProject } from './project-filter.js';
+
 // Type exports
 export type { CarryoverResult } from './types.js';
 export type { MorningWorkflowResult, MorningDataResult } from './morning-workflow.js';
+export type { StatusDataResult } from './status-workflow.js';
+export type { ProjectFilter } from './project-filter.js';
