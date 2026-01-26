@@ -18,5 +18,13 @@ export type {
 // Export utility functions
 export { escapeXml, truncateText } from './utils.js';
 
+// Export compression functions
+export {
+  compressWorkItem,
+  compressPR,
+  compressProject,
+  summarizeReviewers,
+} from './compression.js';
+
 // Export token budget management
 export { TokenBudget, OverflowError, type Allocation } from './token-budget.js';
