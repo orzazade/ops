@@ -33,8 +33,18 @@ export { filterByProject } from './project-filter.js';
 // Response workflow exports
 export { generateResponseDraft } from './respond-workflow.js';
 
+// Delta calculator exports
+export { calculateDelta } from './delta-calculator.js';
+
+// Pin storage exports
+export { loadPins, savePins, pinItem, unpinItem, applyPins } from './pin-storage.js';
+
+// Priorities workflow exports
+export { executePrioritiesWorkflow } from './priorities-workflow.js';
+
 // Type exports
 export type { CarryoverResult } from './types.js';
 export type { MorningWorkflowResult, MorningDataResult } from './morning-workflow.js';
 export type { StatusDataResult } from './status-workflow.js';
 export type { ProjectFilter } from './project-filter.js';
+export type { PrioritiesResult } from './priorities-workflow.js';
