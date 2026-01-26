@@ -337,19 +337,28 @@ We use [Conventional Commits](https://www.conventionalcommits.org/):
 - [x] `/ops:morning` briefing skill
 - [x] History persistence and carryover detection
 
-### Milestone 2: Core Skills (v1.0)
+### Milestone 2: Core Skills (v1.0) ✅
 
-- [ ] `/ops:status <project>` - Leadership status reports
-- [ ] `/ops:respond` - Context-aware response drafting
-- [ ] `/ops:priorities` - Mid-day priority updates
-- [ ] `/ops:eod` - End-of-day summary
+- [x] `/ops:status <project>` - Leadership status reports
+- [x] `/ops:respond` - Context-aware response drafting with tone adaptation
+- [x] `/ops:priorities` - Mid-day priority updates with delta visualization
+- [x] `/ops:eod` - End-of-day summary with accomplishments and blockers
 
-### Future
+### Milestone 3: UX Polish & Sprint Intelligence (v1.1) 🚧
+
+- [ ] **Output Polish** - Tables, separators, visual hierarchy for all skills
+- [ ] **Priority Transparency** - `/ops:why`, `/ops:boost`, `/ops:demote`, `/ops:rules`
+- [ ] **Sprint Intelligence** - `/ops:sprint` interactive TUI for sprint management
+- [ ] **Ticket Research** - `/ops:research <id>` with parallel investigators
+- [ ] **Decision Support** - `/ops:decide` for work recommendations
+
+### Future (v1.2+)
 
 - [ ] Outlook email integration
 - [ ] Calendar awareness
-- [ ] Pattern learning
-- [ ] Team mode
+- [ ] Teams messages integration
+- [ ] Pattern learning (v2.0)
+- [ ] Team mode (v2.0)
 
 ## License
 
