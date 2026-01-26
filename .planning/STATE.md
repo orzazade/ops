@@ -7,12 +7,12 @@
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
 - **Phase:** 12 (Sprint Intelligence) — IN PROGRESS
-- **Plan:** 12-02 complete (capacity analysis algorithms)
-- **Status:** Plan 02 of 06 complete
-- **Last activity:** 2026-01-26 — Completed 12-02-PLAN.md (capacity analysis)
+- **Plan:** 12-03 complete (ADO move operations and TUI display)
+- **Status:** Plan 03 of 06 complete
+- **Last activity:** 2026-01-26 — Completed 12-03-PLAN.md (ADO move operations and TUI display)
 
 **Progress:** [████████            ] 2/5 milestone 3 phases complete (40%)
-**Next:** `/gsd:execute-phase 12 03`
+**Next:** `/gsd:execute-phase 12 04`
 
 ## Milestone 3 Phases
 
@@ -20,7 +20,7 @@
 |-------|------|--------------|--------|
 | 10 | Output Polish | UX-01 to UX-07 | Complete |
 | 11 | Priority Transparency | PRI-01 to PRI-05 | Complete |
-| 12 | Sprint Intelligence | SPR-01 to SPR-06 | In Progress (2/6) |
+| 12 | Sprint Intelligence | SPR-01 to SPR-06 | In Progress (3/6) |
 | 13 | Ticket Research | RSH-01 to RSH-05 | Pending |
 | 14 | Decision Support | DEC-01 to DEC-05 | Pending |
 
@@ -162,10 +162,15 @@
 - First-Fit Decreasing algorithm for optimal sprint work distribution
 - Deferral suggestions prioritize: P3 > P2 > P1, then oldest, then largest items
 - TDD methodology with atomic commits: test → feat → refactor cycle
+- JSON Patch Document format for ADO work item updates (standard REST API pattern)
+- Sequential operation execution respects ADO API rate limits (avoids 429 errors)
+- Progress callbacks optional for CLI and programmatic operations
+- Color-coded capacity thresholds: green <80%, yellow 80-100%, red >100%, bright red >120%
+- suppressNotifications=true on ADO updates to avoid email spam during batch operations
 
 ## Session Continuity
-- **Last session:** 2026-01-26T18:13:03Z
-- **Stopped at:** Completed 12-02-PLAN.md (capacity analysis algorithms)
+- **Last session:** 2026-01-26T18:17:20Z
+- **Stopped at:** Completed 12-03-PLAN.md (ADO move operations and TUI display)
 - **Resume file:** None
 
 ## Pending TODOs
