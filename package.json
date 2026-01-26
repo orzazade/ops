@@ -10,7 +10,8 @@
     "./state": "./dist/state/index.js",
     "./utils": "./dist/utils/index.js",
     "./researchers": "./dist/researchers/index.js",
-    "./context": "./dist/context/index.js"
+    "./context": "./dist/context/index.js",
+    "./triage": "./dist/triage/index.js"
   },
   "directories": {
     "doc": "docs"
