@@ -7,12 +7,12 @@
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
 - **Phase:** 14 (Decision Support) — IN PROGRESS
-- **Plan:** 1 of 3 complete (14-01-PLAN.md)
-- **Status:** Plan 14-01 complete ✓
-- **Last activity:** 2026-01-26 — Completed 14-01-PLAN.md (Time Context and Work Classification)
+- **Plan:** 2 of 3 complete (14-02-PLAN.md)
+- **Status:** Plan 14-02 complete ✓
+- **Last activity:** 2026-01-27 — Completed 14-02-PLAN.md (Candidate Selection and Recommendation)
 
 **Progress:** [████████████████    ] 4/5 milestone 3 phases complete (80%)
-**Next:** `/gsd:execute-phase 14-02` or `/gsd:plan-phase 14`
+**Next:** `/gsd:execute-phase 14-03` or `/gsd:plan-phase 14`
 
 ## Milestone 3 Phases
 
@@ -22,7 +22,7 @@
 | 11 | Priority Transparency | PRI-01 to PRI-05 | Complete |
 | 12 | Sprint Intelligence | SPR-01 to SPR-06 | Complete |
 | 13 | Ticket Research | RSH-01 to RSH-05 | Complete |
-| 14 | Decision Support | DEC-01 to DEC-05 | In Progress (1/3 plans) |
+| 14 | Decision Support | DEC-01 to DEC-05 | In Progress (2/3 plans) |
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -189,10 +189,14 @@
 - Deep work mode: 8-11am (peak focus), meeting mode: 11am-2pm, admin mode: 2-5pm, after-hours: weekends/outside 8am-6pm
 - Work classification uses title keywords only (description not in CompressedWorkItem)
 - Default to deep work type when classification uncertain (conservative approach)
+- Time-fit scoring matrix: 1.0 perfect, 0.7 acceptable, 0.5 mismatch for work mode alignment
+- 10% score threshold for alternative recommendations (avoid overwhelming with too many options)
+- Heuristic effort estimation: quick (30min), medium (2hr), deep (half-day+) based on keywords
+- Context links empty in compressed types (token optimization, could reconstruct URLs if needed)
 
 ## Session Continuity
-- **Last session:** 2026-01-26 20:24 UTC
-- **Stopped at:** Completed 14-01-PLAN.md (Time Context and Work Classification)
+- **Last session:** 2026-01-27 00:30 UTC
+- **Stopped at:** Completed 14-02-PLAN.md (Candidate Selection and Recommendation)
 - **Resume file:** None
 
 ## Pending TODOs
