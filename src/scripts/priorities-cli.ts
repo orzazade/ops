@@ -98,7 +98,7 @@ async function main() {
     process.exit(1);
   }
 
-  const { priorities, baseline, delta, pins, warnings } = result.value;
+  const { priorities, baseline, delta, pins, overrides, warnings } = result.value;
 
   // Output warnings to stderr so they don't interfere with XML data
   if (warnings.length > 0) {
@@ -108,6 +108,10 @@ async function main() {
   }
 
   console.error(`[ops:priorities] Baseline: ${baseline.source} (${baseline.timeSince || 'just now'})\n`);
+
+  if (overrides.applied > 0) {
+    console.error(`[ops:priorities] Overrides: ${overrides.boosted} boosted, ${overrides.demoted} demoted\n`);
+  }
 
   // Output the data as XML for Claude Code to process
   console.log('<priorities-data>');
@@ -134,6 +138,12 @@ async function main() {
   console.log(`    <applied>${pins.applied}</applied>`);
   console.log(`    <total>${pins.total}</total>`);
   console.log('  </pins>');
+
+  console.log('  <overrides>');
+  console.log(`    <applied>${overrides.applied}</applied>`);
+  console.log(`    <boosted>${overrides.boosted}</boosted>`);
+  console.log(`    <demoted>${overrides.demoted}</demoted>`);
+  console.log('  </overrides>');
 
   console.log('  <priorities>');
   for (const item of priorities) {

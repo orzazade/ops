@@ -15,6 +15,7 @@ import { PriorityScorer } from '../triage/scorer.js';
 import { loadBriefing, persistBriefing } from './history-persistence.js';
 import { calculateDelta } from './delta-calculator.js';
 import { loadPins, applyPins } from './pin-storage.js';
+import { loadOverrides } from '../triage/overrides.js';
 import { compressWorkItem, compressPR } from '../context/compression.js';
 import type { Briefing, BriefingItem } from '../triage/schemas.js';
 import type { ScoreableItem } from '../triage/types.js';
@@ -39,6 +40,11 @@ export interface PrioritiesResult {
   pins: {
     applied: number;
     total: number;
+  };
+  overrides: {
+    applied: number;
+    boosted: number;
+    demoted: number;
   };
   warnings: string[];
 }
@@ -185,10 +191,13 @@ export async function executePrioritiesWorkflow(): Promise<
         );
       }
 
+      // Load overrides for bootstrap baseline
+      const overrides = await loadOverrides();
+
       // Score items to create baseline
       const scorer = new PriorityScorer(config);
       const scoreableItems = extractScoreableItems(results);
-      const scoredItems = scorer.scoreAll(scoreableItems);
+      const scoredItems = scorer.scoreAllWithOverrides(scoreableItems, overrides);
 
       // Sort by score (highest first) and take top priorities
       const sorted = scoredItems.sort((a, b) => b.score - a.score);
@@ -252,10 +261,13 @@ export async function executePrioritiesWorkflow(): Promise<
       ...baseline.needs_response,
     ];
 
-    // Score current items
+    // Load overrides (should be same as bootstrap, but load again for consistency)
+    const overrides = await loadOverrides();
+
+    // Score current items with overrides
     const scorer = new PriorityScorer(config);
     const scoreableItems = extractScoreableItems(results);
-    const scoredItems = scorer.scoreAll(scoreableItems);
+    const scoredItems = scorer.scoreAllWithOverrides(scoreableItems, overrides);
 
     // Sort by score and take top items
     const sorted = scoredItems.sort((a, b) => b.score - a.score);
@@ -336,6 +348,11 @@ export async function executePrioritiesWorkflow(): Promise<
       pins: {
         applied: pinnedCount,
         total: pins.length,
+      },
+      overrides: {
+        applied: overrides.length,
+        boosted: overrides.filter(o => o.amount > 0).length,
+        demoted: overrides.filter(o => o.amount < 0).length,
       },
       warnings,
     });

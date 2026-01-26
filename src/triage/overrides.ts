@@ -9,8 +9,12 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import writeFileAtomic from 'write-file-atomic';
 import { Result, ok, err } from 'neverthrow';
-import { OverridesFileSchema, type Override, type OverridesFile } from './schemas.js';
+import { OverridesFileSchema } from './schemas.js';
+import type { Override, OverridesFile } from './schemas.js';
 import type { ScoredItem, ScoreableItemType, AppliedRule } from './types.js';
+
+// Re-export Override type for external consumers
+export type { Override } from './schemas.js';
 
 const OPS_DIR = path.join(process.env.HOME || '', '.ops');
 const OVERRIDES_FILE = path.join(OPS_DIR, 'overrides.json');

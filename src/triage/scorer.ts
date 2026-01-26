@@ -14,6 +14,7 @@ import type {
   ScoringRule,
   AppliedRule,
 } from './types.js';
+import { applyOverrides, type Override } from './overrides.js';
 
 /**
  * Scoring rules for work items.
@@ -116,6 +117,23 @@ export class PriorityScorer {
 
     // Sort descending by score
     return scored.sort((a, b) => b.score - a.score);
+  }
+
+  /**
+   * Score multiple items, apply overrides, and sort by score descending.
+   *
+   * @param items - Array of items to score
+   * @param overrides - Optional overrides to apply after scoring
+   * @returns Sorted array of scored items (highest score first)
+   */
+  scoreAllWithOverrides(items: ScoreableItem[], overrides: Override[] = []): ScoredItem[] {
+    const scored = items.map((item) => this.score(item));
+
+    // Apply overrides
+    const withOverrides = applyOverrides(scored, overrides);
+
+    // Sort descending by score
+    return withOverrides.sort((a, b) => b.score - a.score);
   }
 
   /**
