@@ -17,9 +17,10 @@ export { identifyCarryover } from './carryover.js';
 // Morning workflow exports
 export {
   executeMorningWorkflow,
+  gatherMorningData,
   determineBriefingTier,
 } from './morning-workflow.js';
 
 // Type exports
 export type { CarryoverResult } from './types.js';
-export type { MorningWorkflowResult } from './morning-workflow.js';
+export type { MorningWorkflowResult, MorningDataResult } from './morning-workflow.js';

@@ -2,75 +2,81 @@
 /**
  * CLI entry point for /ops:morning skill.
  *
- * Invokes the morning workflow and outputs formatted briefing.
- * Designed to be called via `npx tsx src/scripts/morning-cli.ts`.
+ * Gathers and scores data from Azure DevOps and GSD projects,
+ * then outputs structured data for Claude Code to generate the briefing.
+ *
+ * This avoids requiring a separate Anthropic API key since Claude Code
+ * subscription users already have access to Claude through the skill.
  */
 
-import { executeMorningWorkflow } from '../integration/index.js';
+import { gatherMorningData, persistBriefing } from '../integration/index.js';
+import type { Briefing } from '../triage/schemas.js';
 
 async function main() {
-  console.log('Starting morning briefing...\n');
+  console.error('[ops:morning] Gathering work data...\n');
 
-  const result = await executeMorningWorkflow();
+  const result = await gatherMorningData();
 
   if (result.isErr()) {
     console.error('Error:', result.error.message);
     process.exit(1);
   }
 
-  const { briefing, tier, warnings, carryover } = result.value;
+  const { context, scoredItems, tier, warnings, yesterday } = result.value;
 
-  // Show warnings if partial data
+  // Output warnings to stderr so they don't interfere with data
   if (warnings.length > 0) {
-    console.log('Warnings:');
-    warnings.forEach(w => console.log(`  - ${w}`));
-    console.log('');
+    console.error('Warnings:');
+    warnings.forEach(w => console.error(`  - ${w}`));
+    console.error('');
   }
 
-  // Format and display briefing
-  console.log('='.repeat(60));
-  console.log('MORNING BRIEFING');
-  console.log('='.repeat(60));
-  console.log('');
-  console.log('Summary:', briefing.summary);
-  console.log('');
+  console.error(`[ops:morning] Data quality: Tier ${tier}/5`);
+  console.error(`[ops:morning] Scored ${scoredItems.length} items\n`);
 
-  console.log('Top Priorities:');
-  briefing.top_priorities.forEach((item, i) => {
-    console.log(`  ${i + 1}. [${item.type}] ${item.title}`);
-    console.log(`     Reason: ${item.priority_reason}`);
-    if (item.needs_response && item.suggested_response) {
-      console.log(`     Suggested response: ${item.suggested_response}`);
-    }
-  });
-  console.log('');
+  // Output the data as XML for Claude Code to process
+  console.log('<morning-data>');
+  console.log(`  <tier>${tier}</tier>`);
+  console.log(`  <timestamp>${new Date().toISOString()}</timestamp>`);
 
-  if (briefing.needs_response.length > 0) {
-    console.log('Needs Response:');
-    briefing.needs_response.forEach((item, i) => {
-      console.log(`  ${i + 1}. [${item.type}] ${item.title}`);
-      if (item.suggested_response) {
-        console.log(`     Suggested: ${item.suggested_response}`);
-      }
-    });
-    console.log('');
+  if (yesterday) {
+    console.log('  <yesterday>');
+    console.log(`    <summary>${escapeXml(yesterday.summary)}</summary>`);
+    console.log(`    <priority-count>${yesterday.top_priorities.length}</priority-count>`);
+    console.log('  </yesterday>');
   }
 
-  if (briefing.blockers && briefing.blockers.length > 0) {
-    console.log('Blockers:');
-    briefing.blockers.forEach(b => console.log(`  - ${b}`));
-    console.log('');
+  console.log('  <scored-items>');
+  for (const item of scoredItems) {
+    console.log(`    <item type="${item.type}" id="${item.id}" score="${item.score}">`);
+    console.log(`      <title>${escapeXml(item.title)}</title>`);
+    if (item.priority) console.log(`      <priority>${item.priority}</priority>`);
+    if (item.state) console.log(`      <state>${escapeXml(item.state)}</state>`);
+    if (item.assignedTo) console.log(`      <assigned-to>${escapeXml(item.assignedTo)}</assigned-to>`);
+    console.log(`      <rules>${item.appliedRules.join(', ')}</rules>`);
+    console.log('    </item>');
   }
+  console.log('  </scored-items>');
 
-  // Carryover info
-  if (carryover) {
-    console.log(`Carryover: ${carryover.count} items from yesterday, ${carryover.newCount} new`);
-  }
+  console.log('  <context>');
+  console.log(context);
+  console.log('  </context>');
 
-  console.log('');
-  console.log(`Generated: ${briefing.timestamp}`);
-  console.log(`Data quality: Tier ${tier}/5`);
-  console.log('='.repeat(60));
+  console.log('</morning-data>');
+
+  console.error('\n[ops:morning] Data output complete. Claude will now generate your briefing.');
+}
+
+/**
+ * Escape special XML characters.
+ */
+function escapeXml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
 }
 
 main().catch(err => {

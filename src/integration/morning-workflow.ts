@@ -34,6 +34,27 @@ export interface MorningWorkflowResult {
 }
 
 /**
+ * Result of data gathering (without LLM briefing generation).
+ * Used for Claude Code skill integration where Claude generates the briefing.
+ */
+export interface MorningDataResult {
+  context: string; // XML context from ContextEngine
+  scoredItems: Array<{
+    id: number;
+    type: 'work_item' | 'pull_request';
+    title: string;
+    score: number;
+    appliedRules: string[];
+    priority?: number;
+    state?: string;
+    assignedTo?: string;
+  }>;
+  tier: number;
+  warnings: string[];
+  yesterday?: Briefing;
+}
+
+/**
  * Determine briefing degradation tier based on available data.
  *
  * Tier 1: ADO + GSD + Yesterday (best case)
@@ -336,5 +357,165 @@ export async function executeMorningWorkflow(): Promise<
       return err(error);
     }
     return err(new Error(`Unknown error in morning workflow: ${error}`));
+  }
+}
+
+/**
+ * Gather morning data without LLM briefing generation.
+ *
+ * Use this for Claude Code skill integration where Claude generates
+ * the briefing from the gathered and scored data.
+ *
+ * Orchestrates:
+ * 1. Config loading
+ * 2. State initialization
+ * 3. Yesterday's briefing loading
+ * 4. Research execution (ADO + GSD in parallel)
+ * 5. Context building
+ * 6. Priority scoring
+ *
+ * Does NOT:
+ * - Call Anthropic API for briefing generation
+ * - Persist briefing (caller's responsibility after Claude generates it)
+ *
+ * @returns Result with MorningDataResult or Error
+ */
+export async function gatherMorningData(): Promise<
+  Result<MorningDataResult, Error>
+> {
+  try {
+    console.log('[MorningWorkflow] Gathering morning data...');
+
+    // 1. Load config (fatal if missing)
+    console.log('[MorningWorkflow] Loading config...');
+    const config = await loadOrPromptConfig();
+
+    // 2. Initialize state directories
+    console.log('[MorningWorkflow] Initializing state directories...');
+    await initializeStateDirs();
+
+    // 3. Load yesterday's briefing (non-fatal)
+    console.log('[MorningWorkflow] Loading yesterday briefing...');
+    const yesterday = await loadYesterdayBriefing();
+    if (yesterday) {
+      console.log(
+        `[MorningWorkflow] Found yesterday's briefing with ${yesterday.top_priorities.length} priorities`
+      );
+    } else {
+      console.log('[MorningWorkflow] No yesterday briefing found');
+    }
+
+    // 4. Execute researchers in parallel
+    console.log('[MorningWorkflow] Executing researchers...');
+
+    // Get PAT from environment
+    const pat = process.env.AZURE_DEVOPS_PAT;
+    if (!pat) {
+      return err(
+        new Error(
+          'AZURE_DEVOPS_PAT environment variable not set. ' +
+            'Set it to authenticate with Azure DevOps.'
+        )
+      );
+    }
+
+    const adoResearcher = new ADOResearcher({
+      ...config.azure,
+      pat,
+    });
+    const gsdResearcher = new GSDResearcher();
+
+    const orchestrator = new ResearchOrchestrator(adoResearcher, gsdResearcher);
+    const results = await orchestrator.execute();
+
+    // 5. Determine degradation tier and generate warnings
+    const tier = determineBriefingTier(results, yesterday !== undefined);
+    const warnings = generateWarnings(results);
+
+    console.log(
+      `[MorningWorkflow] Degradation tier: ${tier}, warnings: ${warnings.length}`
+    );
+
+    // Handle tier 5 (no data at all) - return empty result
+    if (tier === 5) {
+      return ok({
+        context: '<morning-context><error>No data available from researchers</error></morning-context>',
+        scoredItems: [],
+        tier,
+        warnings: [
+          ...warnings,
+          'ADO researcher failed - check AZURE_DEVOPS_PAT and network connection',
+          'GSD researcher failed - check file system permissions',
+        ],
+        yesterday,
+      });
+    }
+
+    // Handle tier 4 (yesterday only, no new data)
+    if (tier === 4) {
+      return ok({
+        context: '<morning-context><info>No new data today - showing yesterday\'s context</info></morning-context>',
+        scoredItems: [],
+        tier,
+        warnings,
+        yesterday,
+      });
+    }
+
+    // 6. Build context with ContextEngine
+    console.log('[MorningWorkflow] Building context...');
+    const contextEngine = new ContextEngine({
+      totalBudget: 4000,
+    });
+
+    const contextResult = await contextEngine.fromResearchResults(results);
+
+    if (contextResult.isErr()) {
+      return err(
+        new Error(
+          `Context building failed: ${contextResult.error.message}. Unable to gather data.`
+        )
+      );
+    }
+
+    const context = contextResult.value;
+    const stats = contextEngine.getStats();
+    console.log(
+      `[MorningWorkflow] Context built: ${stats.totalTokens} tokens, ${stats.sectionCount} sections`
+    );
+
+    // 7. Score items with PriorityScorer
+    console.log('[MorningWorkflow] Scoring items...');
+    const scorer = new PriorityScorer(config);
+    const scoreableItems = extractScoreableItems(results);
+    const scoredItems = scorer.scoreAll(scoreableItems);
+    console.log(`[MorningWorkflow] Scored ${scoredItems.length} items`);
+
+    // Transform scored items to simpler format for output
+    const simplifiedItems = scoredItems.map((scored) => ({
+      id: scored.item.item.id,
+      type: scored.item.type,
+      title: scored.item.item.title,
+      score: scored.score,
+      appliedRules: scored.appliedRules.map(r => r.name),
+      priority: scored.item.type === 'work_item' ? (scored.item.item as any).priority : undefined,
+      state: scored.item.type === 'work_item' ? (scored.item.item as any).state : (scored.item.item as any).status,
+      assignedTo: scored.item.type === 'work_item' ? (scored.item.item as any).assignedTo : (scored.item.item as any).author,
+    }));
+
+    console.log('[MorningWorkflow] Data gathering complete!');
+
+    return ok({
+      context,
+      scoredItems: simplifiedItems,
+      tier,
+      warnings,
+      yesterday,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return err(error);
+    }
+    return err(new Error(`Unknown error gathering morning data: ${error}`));
   }
 }
