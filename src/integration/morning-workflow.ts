@@ -208,6 +208,7 @@ export async function executeMorningWorkflow(): Promise<
 
     const adoResearcher = new ADOResearcher({
       ...config.azure,
+      team: config.user?.team,
       pat,
     });
     const gsdResearcher = new GSDResearcher();
@@ -421,6 +422,7 @@ export async function gatherMorningData(): Promise<
 
     const adoResearcher = new ADOResearcher({
       ...config.azure,
+      team: config.user?.team,
       pat,
     });
     const gsdResearcher = new GSDResearcher();

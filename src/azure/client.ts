@@ -6,13 +6,16 @@
 import * as azdev from 'azure-devops-node-api';
 import type { IWorkItemTrackingApi } from 'azure-devops-node-api/WorkItemTrackingApi.js';
 import type { IGitApi } from 'azure-devops-node-api/GitApi.js';
+import type { IWorkApi } from 'azure-devops-node-api/WorkApi.js';
 import type { WorkItem } from 'azure-devops-node-api/interfaces/WorkItemTrackingInterfaces.js';
 import type { GitPullRequest, GitRepository } from 'azure-devops-node-api/interfaces/GitInterfaces.js';
+import type { TeamSettingsIteration } from 'azure-devops-node-api/interfaces/WorkInterfaces.js';
 
 export interface ADOClientConfig {
   organization: string;
   project: string;
   pat: string;
+  team?: string;
 }
 
 /**
@@ -23,6 +26,7 @@ export class ADOClient {
   private connection: azdev.WebApi;
   private witApi?: IWorkItemTrackingApi;
   private gitApi?: IGitApi;
+  private workApi?: IWorkApi;
 
   constructor(private config: ADOClientConfig) {
     const orgUrl = `https://dev.azure.com/${config.organization}`;
@@ -51,17 +55,65 @@ export class ADOClient {
   }
 
   /**
-   * Fetch work items assigned to current user that are not closed.
+   * Get Work API instance (lazy initialization).
    */
-  async fetchWorkItems(): Promise<WorkItem[]> {
+  private async getWorkApi(): Promise<IWorkApi> {
+    if (!this.workApi) {
+      this.workApi = await this.connection.getWorkApi();
+    }
+    return this.workApi;
+  }
+
+  /**
+   * Get the current iteration for the team.
+   * Returns the iteration path (e.g., "AppXite Platform\\Sprint 213").
+   */
+  async getCurrentIteration(): Promise<TeamSettingsIteration | null> {
+    if (!this.config.team) {
+      return null;
+    }
+
+    const workApi = await this.getWorkApi();
+    const teamContext = {
+      project: this.config.project,
+      team: this.config.team,
+    };
+
+    const iterations = await workApi.getTeamIterations(teamContext, 'current');
+
+    if (iterations && iterations.length > 0) {
+      return iterations[0];
+    }
+
+    return null;
+  }
+
+  /**
+   * Fetch work items assigned to current user that are not closed.
+   * If filterByCurrentSprint is true and team is configured, only fetches items from current sprint.
+   */
+  async fetchWorkItems(filterByCurrentSprint: boolean = true): Promise<WorkItem[]> {
     const witApi = await this.getWorkItemApi();
+
+    // Build WIQL query
+    let iterationFilter = '';
+
+    if (filterByCurrentSprint && this.config.team) {
+      const currentIteration = await this.getCurrentIteration();
+      if (currentIteration?.path) {
+        // Escape backslashes for WIQL
+        const escapedPath = currentIteration.path.replace(/\\/g, '\\\\');
+        iterationFilter = `AND [System.IterationPath] = '${escapedPath}'`;
+      }
+    }
 
     // WIQL query to get work items assigned to me that aren't closed
     const wiql = {
       query: `SELECT [System.Id]
               FROM WorkItems
               WHERE [System.AssignedTo] = @Me
-              AND [System.State] NOT IN ('Closed', 'Removed')`,
+              AND [System.State] NOT IN ('Closed', 'Removed')
+              ${iterationFilter}`,
     };
 
     const result = await witApi.queryByWiql(wiql, { project: this.config.project });

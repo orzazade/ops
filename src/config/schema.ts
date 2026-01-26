@@ -9,6 +9,7 @@ const VipSchema = z.object({
 const AzureSchema = z.object({
   organization: z.string(),
   default_project: z.string().optional(),
+  team: z.string().optional(),
 });
 
 const UserSchema = z.object({

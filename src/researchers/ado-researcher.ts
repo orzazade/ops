@@ -11,6 +11,7 @@ import type { ADOConfig } from '../config/schema.js';
 
 export interface ADOResearcherConfig extends ADOConfig {
   pat: string;
+  team?: string;
 }
 
 /**
@@ -37,6 +38,7 @@ export class ADOResearcher implements Researcher<ADOData> {
       organization: config.organization,
       project: config.default_project || '',
       pat: config.pat,
+      team: config.team,
     });
   }
 

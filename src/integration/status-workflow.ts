@@ -185,6 +185,7 @@ export async function gatherProjectStatus(
 
     const adoResearcher = new ADOResearcher({
       ...config.azure,
+      team: config.user?.team,
       pat,
     });
     const gsdResearcher = new GSDResearcher();
