@@ -21,7 +21,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "build": "tsc",
-    "build:watch": "tsc --watch"
+    "build:watch": "tsc --watch",
+    "decide": "tsx src/scripts/decide-cli.ts"
   },
   "keywords": [
     "claude-code",
