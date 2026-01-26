@@ -17,6 +17,7 @@ import { calculateDelta } from './delta-calculator.js';
 import { loadPins, applyPins } from './pin-storage.js';
 import { loadOverrides } from '../triage/overrides.js';
 import { compressWorkItem, compressPR } from '../context/compression.js';
+import { formatScoreHint } from '../formatters/score-explainer.js';
 import type { Briefing, BriefingItem } from '../triage/schemas.js';
 import type { ScoreableItem } from '../triage/types.js';
 
@@ -208,7 +209,7 @@ export async function executePrioritiesWorkflow(): Promise<
         id: scored.item.item.id,
         type: scored.item.type,
         title: scored.item.item.title,
-        priority_reason: scored.appliedRules.map((r) => r.name).join(', ') || 'default priority',
+        priority_reason: formatScoreHint(scored.appliedRules) || 'default priority',
         needs_response: false,
       }));
 
@@ -278,7 +279,7 @@ export async function executePrioritiesWorkflow(): Promise<
       id: scored.item.item.id,
       type: scored.item.type,
       title: scored.item.item.title,
-      priority_reason: scored.appliedRules.map((r) => r.name).join(', ') || 'default priority',
+      priority_reason: formatScoreHint(scored.appliedRules) || 'default priority',
       needs_response: false,
     }));
 
