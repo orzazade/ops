@@ -6,21 +6,21 @@
 
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
-- **Phase:** 11 (Priority Transparency) — IN PROGRESS
-- **Plan:** 03 of 05
-- **Status:** Completed 11-03-PLAN.md (CLI tools and skills for transparency)
-- **Last activity:** 2026-01-26 — Completed 11-03-PLAN.md
+- **Phase:** 12 (Sprint Intelligence) — IN PROGRESS
+- **Plan:** 12-02 complete (capacity analysis algorithms)
+- **Status:** Plan 02 of 06 complete
+- **Last activity:** 2026-01-26 — Completed 12-02-PLAN.md (capacity analysis)
 
-**Progress:** [████                ] 1/5 milestone 3 phases complete (20%)
-**Next:** Continue Phase 11 (11-04-PLAN.md or higher)
+**Progress:** [████████            ] 2/5 milestone 3 phases complete (40%)
+**Next:** `/gsd:execute-phase 12 03`
 
 ## Milestone 3 Phases
 
 | Phase | Name | Requirements | Status |
 |-------|------|--------------|--------|
 | 10 | Output Polish | UX-01 to UX-07 | Complete |
-| 11 | Priority Transparency | PRI-01 to PRI-05 | In Progress (3/5 plans) |
-| 12 | Sprint Intelligence | SPR-01 to SPR-06 | Pending |
+| 11 | Priority Transparency | PRI-01 to PRI-05 | Complete |
+| 12 | Sprint Intelligence | SPR-01 to SPR-06 | In Progress (2/6) |
 | 13 | Ticket Research | RSH-01 to RSH-05 | Pending |
 | 14 | Decision Support | DEC-01 to DEC-05 | Pending |
 
@@ -155,10 +155,17 @@
 - Default boost/demote amount is 10 points
 - why-cli fetches live ADO data to show current state
 - Score hints show top 2 rules by absolute weight for brevity
+- Sprint capacity defaults to 20 story points (configurable via sprint.capacity_points)
+- Story points default to 3 if unset on work items to prevent zero-point skewing
+- Over-commitment threshold is 120% capacity (isOverCommitted flag)
+- cli-progress package for terminal progress bar visualization
+- First-Fit Decreasing algorithm for optimal sprint work distribution
+- Deferral suggestions prioritize: P3 > P2 > P1, then oldest, then largest items
+- TDD methodology with atomic commits: test → feat → refactor cycle
 
 ## Session Continuity
-- **Last session:** 2026-01-26
-- **Stopped at:** Completed 11-03-PLAN.md (CLI tools and skills for transparency)
+- **Last session:** 2026-01-26T18:13:03Z
+- **Stopped at:** Completed 12-02-PLAN.md (capacity analysis algorithms)
 - **Resume file:** None
 
 ## Pending TODOs
