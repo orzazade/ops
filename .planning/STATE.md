@@ -2,13 +2,13 @@
 
 ## Current Position
 - **Milestone:** 2 (Core Skills v1.0)
-- **Phase:** 9 (End-of-Day Summary) - IN PROGRESS
-- **Plan:** 2 of 3 (Core Analysis Modules) - COMPLETE
-- **Status:** Phase 9 plan 2 complete (3/3 tasks)
-- **Last activity:** 2026-01-26 - Completed 09-02-PLAN.md
+- **Phase:** 9 (End-of-Day Summary) - COMPLETE
+- **Plan:** 3 of 3 (EOD Workflow Orchestrator) - COMPLETE
+- **Status:** Phase 9 complete (all 3 plans done)
+- **Last activity:** 2026-01-26 - Completed 09-03-PLAN.md
 
-**Progress:** █████████████████ 5/6 milestone 2 phases complete (83.3%)
-**Next:** Phase 9 plan 3 (EOD Workflow Orchestrator) ready for execution
+**Progress:** ██████████████████ 6/6 milestone 2 phases complete (100%)
+**Next:** Milestone 2 complete! Ready for next milestone.
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -111,10 +111,15 @@
 - Carryover reason priority: blocked > partially_complete > deprioritized > no_time
 - Pure function versions (calculateBlockerAgeWithYesterday) enable testing without async
 - Evidence field explains inference reasoning for transparency
+- EOD workflow uses 4-tier degradation system (vs 5-tier morning) since yesterday EOD not a data source
+- Blocker extraction via priority_reason pattern matching for "blocked" keyword
+- Personal journal tone in /ops:eod skill (first person, reflective, honest)
+- Escalation threshold at 3+ days blocked with suggested actions
+- EOD workflow follows priorities-workflow pattern (not morning-workflow)
 
 ## Session Continuity
-- **Last session:** 2026-01-26 17:29 UTC
-- **Stopped at:** Completed 09-02-PLAN.md (Core Analysis Modules)
+- **Last session:** 2026-01-26 13:02 UTC
+- **Stopped at:** Completed 09-03-PLAN.md (EOD Workflow Orchestrator)
 - **Resume file:** None
 
 ## Pending TODOs
