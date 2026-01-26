@@ -6,13 +6,13 @@
 
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
-- **Phase:** 13 (Ticket Research) — IN PROGRESS
-- **Plan:** 3 of 5 complete (13-03-PLAN.md)
-- **Status:** Wave 2 complete - all investigators implemented
-- **Last activity:** 2026-01-26 — Completed 13-03-PLAN.md (Ticket & Wiki Investigators + Orchestrator)
+- **Phase:** 14 (Decision Support) — IN PROGRESS
+- **Plan:** 1 of 3 complete (14-01-PLAN.md)
+- **Status:** Plan 14-01 complete ✓
+- **Last activity:** 2026-01-26 — Completed 14-01-PLAN.md (Time Context and Work Classification)
 
-**Progress:** [████████████        ] 3/5 milestone 3 phases complete (60%)
-**Next:** Wave 3 skill integration (13-04), then summary generation (13-05)
+**Progress:** [████████████████    ] 4/5 milestone 3 phases complete (80%)
+**Next:** `/gsd:execute-phase 14-02` or `/gsd:plan-phase 14`
 
 ## Milestone 3 Phases
 
@@ -21,8 +21,8 @@
 | 10 | Output Polish | UX-01 to UX-07 | Complete |
 | 11 | Priority Transparency | PRI-01 to PRI-05 | Complete |
 | 12 | Sprint Intelligence | SPR-01 to SPR-06 | Complete |
-| 13 | Ticket Research | RSH-01 to RSH-05 | In Progress (3/5) |
-| 14 | Decision Support | DEC-01 to DEC-05 | Pending |
+| 13 | Ticket Research | RSH-01 to RSH-05 | Complete |
+| 14 | Decision Support | DEC-01 to DEC-05 | In Progress (1/3 plans) |
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -181,10 +181,18 @@
 - WikiInvestigator prepares search queries but delegates wiki search to skill layer
 - InvestigationOrchestrator uses Promise.allSettled for parallel execution with graceful degradation
 - Similar ticket search excludes current ticket and already-related items to avoid redundancy
+- InvestigationContext includes optional workItem field for keyword extraction across investigators
+- CodeInvestigator uses extractKeywords() with workItem title/description from context
+- ResearchWorkflow prepares investigation summary with confidence (3=HIGH, 2=MEDIUM, 1/0=LOW)
+- ApplyWorkflow uses JSON Patch Document format with suppressNotifications=true
+- Time-of-day detection uses local timezone for user-centric work mode categorization
+- Deep work mode: 8-11am (peak focus), meeting mode: 11am-2pm, admin mode: 2-5pm, after-hours: weekends/outside 8am-6pm
+- Work classification uses title keywords only (description not in CompressedWorkItem)
+- Default to deep work type when classification uncertain (conservative approach)
 
 ## Session Continuity
-- **Last session:** 2026-01-26
-- **Stopped at:** Completed 13-03-PLAN.md
+- **Last session:** 2026-01-26 20:24 UTC
+- **Stopped at:** Completed 14-01-PLAN.md (Time Context and Work Classification)
 - **Resume file:** None
 
 ## Pending TODOs
