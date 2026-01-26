@@ -31,3 +31,6 @@ export { TokenBudget, OverflowError, type Allocation } from './token-budget.js';
 
 // Export section builders
 export * from './sections/index.js';
+
+// Export context engine
+export { ContextEngine, type ContextEngineConfig, type SectionPriorities } from './engine.js';
