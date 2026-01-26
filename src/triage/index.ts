@@ -19,9 +19,13 @@ export type {
 } from './types.js';
 
 // Schemas
-export type { Briefing, BriefingItem } from './schemas.js';
-export { BriefingSchema, BriefingItemSchema } from './schemas.js';
+export type { Briefing, BriefingItem, ResponseOption, ResponseDraft } from './schemas.js';
+export { BriefingSchema, BriefingItemSchema, ResponseOptionSchema, ResponseDraftSchema } from './schemas.js';
 
 // Classes
 export { PriorityScorer } from './scorer.js';
 export { BriefingGenerator } from './briefing.js';
+export { ResponseGenerator } from './response-generator.js';
+
+// Response types
+export type { ResponseContext } from './response-generator.js';
