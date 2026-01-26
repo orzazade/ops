@@ -3,11 +3,11 @@
 ## Current Position
 - **Milestone:** 2 (Core Skills v1.0)
 - **Phase:** 8 (Priority Re-ranking) - COMPLETE
-- **Plan:** 2 of 2 - COMPLETE
-- **Status:** Phase 8 complete (priority re-ranking workflow)
-- **Last activity:** 2026-01-26 - Completed 08-02-PLAN.md (Priorities workflow)
+- **Plan:** 3 of 3 - COMPLETE
+- **Status:** Phase 8 complete (priorities CLI and skill)
+- **Last activity:** 2026-01-26 - Completed 08-03-PLAN.md (Priorities CLI and skill)
 
-**Progress:** ████████████░░░░ 3/4 phases complete (75.0%)
+**Progress:** ████████████████ 4/4 phases complete (100.0%)
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -95,10 +95,14 @@
 - Staleness check uses isSameDay() UTC comparison to detect day boundaries
 - Selective re-scoring: unchanged items keep baseline scores, changed/added items re-scored
 - formatTimeSince() provides human-readable time differences (minutes/hours/days ago)
+- CLI outputs XML data, skill instructs Claude to apply visual formatting
+- Pin/unpin operations execute workflow to validate item exists before modifying pins
+- Default item type is work_item for CLI convenience (PRs require --type=pull_request)
+- Visual delta markers: 📌 (pinned), 🆕 (new), ↑ (changed), ✅ (done), → (unchanged)
 
 ## Session Continuity
-- **Last session:** 2026-01-26 12:04 UTC
-- **Stopped at:** Completed 08-02-PLAN.md (priorities workflow)
+- **Last session:** 2026-01-26 12:09 UTC
+- **Stopped at:** Completed 08-03-PLAN.md (priorities CLI and skill)
 - **Resume file:** None
 
 ## Pending TODOs
