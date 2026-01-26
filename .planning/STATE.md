@@ -2,12 +2,12 @@
 
 ## Current Position
 - **Milestone:** 2 (Core Skills v1.0)
-- **Phase:** 8 (Priority Re-ranking) - IN PROGRESS
-- **Plan:** 1 of 2 - COMPLETE
-- **Status:** Phase 8 Plan 1 complete (delta calculator and pin storage)
-- **Last activity:** 2026-01-26 - Completed 08-01-PLAN.md (Core logic)
+- **Phase:** 8 (Priority Re-ranking) - COMPLETE
+- **Plan:** 2 of 2 - COMPLETE
+- **Status:** Phase 8 complete (priority re-ranking workflow)
+- **Last activity:** 2026-01-26 - Completed 08-02-PLAN.md (Priorities workflow)
 
-**Progress:** ███████████░░░░░ 2.625/4 phases complete (65.6%)
+**Progress:** ████████████░░░░ 3/4 phases complete (75.0%)
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -91,10 +91,14 @@
 - Pins persist to ~/.ops/pins.json with version field for schema evolution
 - Graceful degradation returns empty array on missing/corrupt pins file
 - Set-based lookups for O(1) pin membership checks in applyPins()
+- Bootstrap pattern generates fresh baseline when morning briefing missing/stale
+- Staleness check uses isSameDay() UTC comparison to detect day boundaries
+- Selective re-scoring: unchanged items keep baseline scores, changed/added items re-scored
+- formatTimeSince() provides human-readable time differences (minutes/hours/days ago)
 
 ## Session Continuity
-- **Last session:** 2026-01-26 11:58 UTC
-- **Stopped at:** Completed 08-01-PLAN.md (delta calculator and pin storage)
+- **Last session:** 2026-01-26 12:04 UTC
+- **Stopped at:** Completed 08-02-PLAN.md (priorities workflow)
 - **Resume file:** None
 
 ## Pending TODOs
