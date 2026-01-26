@@ -153,3 +153,127 @@ export type ResponseOption = z.infer<typeof ResponseOptionSchema>;
  * Inferred TypeScript type for a response draft.
  */
 export type ResponseDraft = z.infer<typeof ResponseDraftSchema>;
+
+/**
+ * Schema for a single pin.
+ * Represents a briefing item the user wants to keep in focus.
+ */
+export const PinSchema = z.object({
+  /**
+   * Work item ID or PR ID (both ADO items use numeric IDs).
+   */
+  id: z.number(),
+
+  /**
+   * Type discriminant for the item.
+   */
+  type: z.enum(['work_item', 'pull_request']),
+
+  /**
+   * Title of the work item or pull request (cached for display).
+   */
+  title: z.string(),
+
+  /**
+   * ISO timestamp when the item was pinned.
+   */
+  pinned_at: z.string(),
+});
+
+/**
+ * Schema for the pins file stored at ~/.ops/pins.json.
+ * Contains all currently pinned items.
+ */
+export const PinsFileSchema = z.object({
+  /**
+   * Version of the pins file format.
+   */
+  version: z.literal(1),
+
+  /**
+   * Array of pinned items.
+   */
+  pins: z.array(PinSchema),
+});
+
+/**
+ * Schema for a single priority change between morning and current briefing.
+ * Represents how an item's priority changed during the day.
+ */
+export const PriorityChangeSchema = z.object({
+  /**
+   * Work item ID or PR ID.
+   */
+  id: z.number(),
+
+  /**
+   * Type discriminant for the item.
+   */
+  type: z.enum(['work_item', 'pull_request']),
+
+  /**
+   * Title of the work item or pull request.
+   */
+  title: z.string(),
+
+  /**
+   * Change type: added (new), removed (completed), changed (priority reason changed), unchanged.
+   */
+  change_type: z.enum(['added', 'removed', 'changed', 'unchanged']),
+
+  /**
+   * Morning priority reason (if item existed in morning briefing).
+   */
+  morning_reason: z.string().optional(),
+
+  /**
+   * Current priority reason (if item exists in current briefing).
+   */
+  current_reason: z.string().optional(),
+});
+
+/**
+ * Schema for the complete delta between morning and current briefing.
+ * Contains all changes identified during delta calculation.
+ */
+export const PriorityDeltaSchema = z.object({
+  /**
+   * Items that appeared in current briefing but not morning briefing.
+   */
+  added: z.array(PriorityChangeSchema),
+
+  /**
+   * Items that appeared in morning briefing but not current briefing.
+   */
+  removed: z.array(PriorityChangeSchema),
+
+  /**
+   * Items that appeared in both but with different priority reasons.
+   */
+  changed: z.array(PriorityChangeSchema),
+
+  /**
+   * Items that appeared in both with the same priority reason.
+   */
+  unchanged: z.array(PriorityChangeSchema),
+});
+
+/**
+ * Inferred TypeScript type for a pin.
+ */
+export type Pin = z.infer<typeof PinSchema>;
+
+/**
+ * Inferred TypeScript type for the pins file.
+ */
+export type PinsFile = z.infer<typeof PinsFileSchema>;
+
+/**
+ * Inferred TypeScript type for a priority change.
+ */
+export type PriorityChange = z.infer<typeof PriorityChangeSchema>;
+
+/**
+ * Inferred TypeScript type for a priority delta.
+ */
+export type PriorityDelta = z.infer<typeof PriorityDeltaSchema>;
