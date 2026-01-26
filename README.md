@@ -107,7 +107,7 @@ vips:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ops.git
+git clone https://github.com/orzazade/ops.git
 cd ops
 
 # Install dependencies
@@ -365,7 +365,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 <div align="center">
 
-**[Report Bug](https://github.com/yourusername/ops/issues)** • **[Request Feature](https://github.com/yourusername/ops/issues)** • **[Discussions](https://github.com/yourusername/ops/discussions)**
+**[Report Bug](https://github.com/orzazade/ops/issues)** • **[Request Feature](https://github.com/orzazade/ops/issues)** • **[Discussions](https://github.com/orzazade/ops/discussions)**
 
 Made with by developers, for developers
 
