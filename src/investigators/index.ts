@@ -19,3 +19,5 @@ export type {
 } from './types.js';
 
 export { TicketInvestigator } from './ticket-investigator.js';
+export { CodeInvestigator, extractKeywords } from './code-investigator.js';
+export { WikiInvestigator } from './wiki-investigator.js';

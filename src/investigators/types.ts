@@ -42,6 +42,7 @@ export interface CodeFindings {
   references: CodeFinding[];
   tests: CodeFinding[];
   reposSearched: string[];
+  searchQueries: Array<{ pattern: string; glob: string; description: string }>;
 }
 
 /**
@@ -106,6 +107,7 @@ export interface WikiFinding {
 export interface WikiFindings {
   pages: WikiFinding[];
   searchTermsUsed: string[];
+  searchQueries: Array<{ terms: string[]; description: string }>;
 }
 
 /**
