@@ -6,13 +6,13 @@
 
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
-- **Phase:** 14 (Decision Support) — IN PROGRESS
-- **Plan:** 2 of 3 complete (14-02-PLAN.md)
-- **Status:** Plan 14-02 complete ✓
-- **Last activity:** 2026-01-27 — Completed 14-02-PLAN.md (Candidate Selection and Recommendation)
+- **Phase:** 14 (Decision Support) — COMPLETE ✓
+- **Plan:** 3 of 3 complete (14-03-PLAN.md)
+- **Status:** Phase 14 complete ✓
+- **Last activity:** 2026-01-27 — Completed 14-03-PLAN.md (Decision Workflow and CLI Integration)
 
-**Progress:** [████████████████    ] 4/5 milestone 3 phases complete (80%)
-**Next:** `/gsd:execute-phase 14-03` or `/gsd:plan-phase 14`
+**Progress:** [████████████████████] 5/5 milestone 3 phases complete (100%)
+**Next:** Milestone 3 complete! Ready for next milestone planning
 
 ## Milestone 3 Phases
 
@@ -22,7 +22,7 @@
 | 11 | Priority Transparency | PRI-01 to PRI-05 | Complete |
 | 12 | Sprint Intelligence | SPR-01 to SPR-06 | Complete |
 | 13 | Ticket Research | RSH-01 to RSH-05 | Complete |
-| 14 | Decision Support | DEC-01 to DEC-05 | In Progress (2/3 plans) |
+| 14 | Decision Support | DEC-01 to DEC-05 | Complete |
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -193,10 +193,13 @@
 - 10% score threshold for alternative recommendations (avoid overwhelming with too many options)
 - Heuristic effort estimation: quick (30min), medium (2hr), deep (half-day+) based on keywords
 - Context links empty in compressed types (token optimization, could reconstruct URLs if needed)
+- Decision workflow follows priorities-workflow orchestration pattern (consistent across all workflows)
+- CLI outputs XML to stdout, metadata to stderr (clean data/diagnostics separation)
+- Advisory tone for decision recommendations: "I recommend...", "I considered..." (friendly, not directive)
 
 ## Session Continuity
-- **Last session:** 2026-01-27 00:30 UTC
-- **Stopped at:** Completed 14-02-PLAN.md (Candidate Selection and Recommendation)
+- **Last session:** 2026-01-27 00:37 UTC
+- **Stopped at:** Completed 14-03-PLAN.md (Decision Workflow and CLI Integration)
 - **Resume file:** None
 
 ## Pending TODOs

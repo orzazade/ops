@@ -261,18 +261,11 @@ export class ADOClient {
   async fetchWorkItemWithRelations(workItemId: number): Promise<WorkItemWithRelations> {
     const witApi = await this.getWorkItemApi();
 
+    // Note: Azure DevOps API doesn't allow using 'fields' and 'expand' together
+    // When using WorkItemExpand.Relations, we get all fields automatically
     const workItem = await witApi.getWorkItem(
       workItemId,
-      [
-        'System.Id',
-        'System.Title',
-        'System.Description',
-        'System.State',
-        'System.WorkItemType',
-        'System.AreaPath',
-        'System.Tags',
-        'Microsoft.VSTS.Common.AcceptanceCriteria',
-      ],
+      undefined,
       undefined,
       WorkItemExpand.Relations,
       this.config.project
