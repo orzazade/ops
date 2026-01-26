@@ -54,6 +54,12 @@ const PreferencesSchema = z.object({
   timezone: 'UTC',
 });
 
+const SprintSchema = z.object({
+  capacity_points: z.number().default(20),
+}).default({
+  capacity_points: 20,
+});
+
 export const OpsConfigSchema = z.object({
   azure: AzureSchema,
   user: UserSchema.optional(),
@@ -61,7 +67,9 @@ export const OpsConfigSchema = z.object({
   priorities: PrioritiesSchema,
   gsd: GsdSchema,
   preferences: PreferencesSchema,
+  sprint: SprintSchema,
 });
 
 export type OpsConfig = z.infer<typeof OpsConfigSchema>;
 export type ADOConfig = z.infer<typeof AzureSchema>;
+export type SprintConfig = z.infer<typeof SprintSchema>;
