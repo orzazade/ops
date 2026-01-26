@@ -275,8 +275,8 @@ export async function executeEODWorkflow(): Promise<Result<EODResult, Error>> {
       ? detectAccomplishments({
           morningBriefing,
           currentItems,
-          morningGSD: results.gsd.isOk() ? results.gsd.value.data : [],
-          currentGSD: results.gsd.isOk() ? results.gsd.value.data : [],
+          morningGSD: results.gsd.isOk() ? results.gsd.value.data.projects : [],
+          currentGSD: results.gsd.isOk() ? results.gsd.value.data.projects : [],
         })
       : {
           completed: [],

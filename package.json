@@ -48,8 +48,12 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
     "azure-devops-node-api": "^15.1.2",
+    "boxen": "^8.0.1",
     "fast-glob": "^3.3.3",
+    "markdown-table": "^3.0.4",
     "neverthrow": "^8.2.0",
+    "string-width": "^8.1.0",
+    "strip-ansi": "^7.1.2",
     "yaml": "^2.8.2",
     "zod": "^4.3.6"
   },
