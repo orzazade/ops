@@ -5,4 +5,5 @@
  * to help users decide what to work on.
  */
 
-// Exports will be added as modules are created
+export * from './time-context.js';
+export * from './work-classifier.js';

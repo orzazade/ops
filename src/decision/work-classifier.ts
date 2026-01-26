@@ -35,10 +35,6 @@ export function classifyWorkType(item: ScoredItem): WorkTypeHints {
   const { item: scoreableItem } = item;
   const type = scoreableItem.type;
   const title = scoreableItem.item.title.toLowerCase();
-  const description =
-    'description' in scoreableItem.item && scoreableItem.item.description
-      ? scoreableItem.item.description.toLowerCase()
-      : '';
 
   // Meeting-type work: Requires collaboration or review
   if (type === 'pull_request') {
@@ -51,8 +47,7 @@ export function classifyWorkType(item: ScoredItem): WorkTypeHints {
   if (
     title.includes('review') ||
     title.includes('meeting') ||
-    title.includes('discuss') ||
-    description.includes('needs approval')
+    title.includes('discuss')
   ) {
     return {
       type: 'meeting',
