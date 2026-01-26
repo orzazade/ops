@@ -60,3 +60,7 @@ export { analyzeCarryover } from './carryover-analyzer.js';
 // Research workflow exports
 export { ResearchWorkflow, executeResearch, synthesizeFindings } from './research-workflow.js';
 export type { ResearchWorkflowConfig, ResearchWorkflowOutput } from './research-workflow.js';
+
+// Apply workflow exports
+export { ApplyWorkflow, executeApply } from './apply-workflow.js';
+export type { ApplyWorkflowConfig } from './apply-workflow.js';
