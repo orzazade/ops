@@ -22,7 +22,8 @@
     "test:run": "vitest run",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "decide": "tsx src/scripts/decide-cli.ts"
+    "decide": "tsx src/scripts/decide-cli.ts",
+    "install:skills": "mkdir -p ~/.claude/commands/ops && cp skills/*.md ~/.claude/commands/ops/ && echo 'Skills installed to ~/.claude/commands/ops/'"
   },
   "keywords": [
     "claude-code",
