@@ -7,12 +7,12 @@
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
 - **Phase:** 13 (Ticket Research) — IN PROGRESS
-- **Plan:** 2 of 5 complete (13-02-PLAN.md)
-- **Status:** Wave 2 in progress - investigator implementations
-- **Last activity:** 2026-01-26 — Completed 13-02-PLAN.md (Code Investigation & Diff Generation)
+- **Plan:** 3 of 5 complete (13-03-PLAN.md)
+- **Status:** Wave 2 complete - all investigators implemented
+- **Last activity:** 2026-01-26 — Completed 13-03-PLAN.md (Ticket & Wiki Investigators + Orchestrator)
 
 **Progress:** [████████████        ] 3/5 milestone 3 phases complete (60%)
-**Next:** Continue Wave 2 implementations (13-03, 13-04), then orchestration (13-05)
+**Next:** Wave 3 skill integration (13-04), then summary generation (13-05)
 
 ## Milestone 3 Phases
 
@@ -21,7 +21,7 @@
 | 10 | Output Polish | UX-01 to UX-07 | Complete |
 | 11 | Priority Transparency | PRI-01 to PRI-05 | Complete |
 | 12 | Sprint Intelligence | SPR-01 to SPR-06 | Complete |
-| 13 | Ticket Research | RSH-01 to RSH-05 | In Progress (2/5) |
+| 13 | Ticket Research | RSH-01 to RSH-05 | In Progress (3/5) |
 | 14 | Decision Support | DEC-01 to DEC-05 | Pending |
 
 ## Accumulated Decisions
@@ -177,10 +177,14 @@
 - Diff output uses normalized line endings (CRLF to LF) for consistent comparisons
 - detectRepoReferences extracts repo names from ticket content using pattern matching
 - extractKeywords finds PascalCase, camelCase, and technical terms for code search
+- TicketInvestigator maps ADO relation types to semantic categories (hierarchical, related, duplicate, linked)
+- WikiInvestigator prepares search queries but delegates wiki search to skill layer
+- InvestigationOrchestrator uses Promise.allSettled for parallel execution with graceful degradation
+- Similar ticket search excludes current ticket and already-related items to avoid redundancy
 
 ## Session Continuity
 - **Last session:** 2026-01-26
-- **Stopped at:** Completed 13-02-PLAN.md
+- **Stopped at:** Completed 13-03-PLAN.md
 - **Resume file:** None
 
 ## Pending TODOs
