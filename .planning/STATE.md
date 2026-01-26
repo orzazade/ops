@@ -7,12 +7,12 @@
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
 - **Phase:** 13 (Ticket Research) — IN PROGRESS
-- **Plan:** 1 of 5 complete (13-01-PLAN.md)
-- **Status:** Wave 1 complete - foundation layer ready
-- **Last activity:** 2026-01-26 — Completed 13-01-PLAN.md (Ticket Research Foundation)
+- **Plan:** 2 of 5 complete (13-02-PLAN.md)
+- **Status:** Wave 2 in progress - investigator implementations
+- **Last activity:** 2026-01-26 — Completed 13-02-PLAN.md (Code Investigation & Diff Generation)
 
 **Progress:** [████████████        ] 3/5 milestone 3 phases complete (60%)
-**Next:** Wave 2 investigator implementations (13-02, 13-03, 13-04)
+**Next:** Continue Wave 2 implementations (13-03, 13-04), then orchestration (13-05)
 
 ## Milestone 3 Phases
 
@@ -21,7 +21,7 @@
 | 10 | Output Polish | UX-01 to UX-07 | Complete |
 | 11 | Priority Transparency | PRI-01 to PRI-05 | Complete |
 | 12 | Sprint Intelligence | SPR-01 to SPR-06 | Complete |
-| 13 | Ticket Research | RSH-01 to RSH-05 | In Progress (1/5) |
+| 13 | Ticket Research | RSH-01 to RSH-05 | In Progress (2/5) |
 | 14 | Decision Support | DEC-01 to DEC-05 | Pending |
 
 ## Accumulated Decisions
@@ -171,10 +171,16 @@
 - WorkItemWithRelations uses Map for relationship types tracking
 - WIQL keyword search uses CONTAINS operator for flexible substring matching
 - diff and simple-git packages for code analysis in investigators
+- Code investigator prepares search queries but delegates search to Claude Code's Grep tool
+- Repository cloning requires explicit user confirmation to avoid unexpected large downloads
+- Clone URLs include PAT authentication for private Azure DevOps repos
+- Diff output uses normalized line endings (CRLF to LF) for consistent comparisons
+- detectRepoReferences extracts repo names from ticket content using pattern matching
+- extractKeywords finds PascalCase, camelCase, and technical terms for code search
 
 ## Session Continuity
 - **Last session:** 2026-01-26
-- **Stopped at:** Completed 13-01-PLAN.md
+- **Stopped at:** Completed 13-02-PLAN.md
 - **Resume file:** None
 
 ## Pending TODOs
