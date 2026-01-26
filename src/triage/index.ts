@@ -1,12 +1,13 @@
 /**
- * Triage module - Priority scoring for work items and pull requests.
+ * Triage module - Priority scoring and briefing generation.
  *
- * This module provides the foundation for intelligent triage by scoring
- * items based on configurable priority rules.
+ * This module provides intelligent triage by scoring work items and
+ * pull requests, then generating structured daily briefings using Claude AI.
  *
  * @module triage
  */
 
+// Types
 export type {
   ScoreableItem,
   ScoreableWorkItem,
@@ -17,4 +18,10 @@ export type {
   AppliedRule,
 } from './types.js';
 
+// Schemas
+export type { Briefing, BriefingItem } from './schemas.js';
+export { BriefingSchema, BriefingItemSchema } from './schemas.js';
+
+// Classes
 export { PriorityScorer } from './scorer.js';
+export { BriefingGenerator } from './briefing.js';
