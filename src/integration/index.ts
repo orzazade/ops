@@ -64,3 +64,7 @@ export type { ResearchWorkflowConfig, ResearchWorkflowOutput } from './research-
 // Apply workflow exports
 export { ApplyWorkflow, executeApply } from './apply-workflow.js';
 export type { ApplyWorkflowConfig } from './apply-workflow.js';
+
+// Decision workflow exports
+export { executeDecisionWorkflow } from './decision-workflow.js';
+export type { DecisionWorkflowResult } from './decision-workflow.js';
