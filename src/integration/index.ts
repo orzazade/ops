@@ -48,3 +48,11 @@ export type { MorningWorkflowResult, MorningDataResult } from './morning-workflo
 export type { StatusDataResult } from './status-workflow.js';
 export type { ProjectFilter } from './project-filter.js';
 export type { PrioritiesResult } from './priorities-workflow.js';
+
+// EOD workflow exports
+export { executeEODWorkflow } from './eod-workflow.js';
+export type { EODResult } from './eod-workflow.js';
+export { persistEOD, loadEOD, loadYesterdayEOD } from './eod-history.js';
+export { detectAccomplishments } from './accomplishment-tracker.js';
+export { calculateBlockerAge, calculateBlockerAgeWithYesterday } from './blocker-tracker.js';
+export { analyzeCarryover } from './carryover-analyzer.js';
