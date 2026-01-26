@@ -1,7 +1,7 @@
 {
   "name": "ops",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "AI-powered DevOps assistant for Claude Code - morning briefings, priority scoring, and work management for Azure DevOps",
   "type": "module",
   "main": "dist/index.js",
   "exports": {
@@ -19,11 +19,32 @@
   "scripts": {
     "test": "vitest",
     "test:run": "vitest run",
-    "build": "tsc"
+    "build": "tsc",
+    "build:watch": "tsc --watch"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "claude-code",
+    "azure-devops",
+    "ai-assistant",
+    "morning-briefing",
+    "devops",
+    "productivity",
+    "cli",
+    "anthropic"
+  ],
+  "author": "Orkhan Rzazade",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orkhanrzazade/ops.git"
+  },
+  "bugs": {
+    "url": "https://github.com/orkhanrzazade/ops/issues"
+  },
+  "homepage": "https://github.com/orkhanrzazade/ops#readme",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
     "azure-devops-node-api": "^15.1.2",
