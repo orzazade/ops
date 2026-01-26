@@ -5,5 +5,14 @@ export * from './config/loader.js';
 // State
 export * from './state/index.js';
 
-// Utils
-export * from './utils/index.js';
+// Researchers
+export * from './researchers/index.js';
+
+// Context
+export * from './context/index.js';
+
+// Triage
+export * from './triage/index.js';
+
+// Integration (Phase 5)
+export * from './integration/index.js';
