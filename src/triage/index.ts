@@ -29,3 +29,6 @@ export { ResponseGenerator } from './response-generator.js';
 
 // Response types
 export type { ResponseContext } from './response-generator.js';
+
+// Overrides
+export * from './overrides.js';

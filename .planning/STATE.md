@@ -1,14 +1,28 @@
 # Ops Project State
 
+## Project Reference
+- **Core Value:** AI-powered DevOps assistant for morning briefings, priority scoring, and work management
+- **Current Focus:** Transform outputs into beautiful, scannable format with interactive sprint management
+
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
-- **Phase:** Not started (defining requirements)
-- **Plan:** —
-- **Status:** Defining requirements
-- **Last activity:** 2026-01-26 — Milestone v1.1 started
+- **Phase:** 10 (Output Polish) — VERIFIED ✓
+- **Plan:** All plans complete
+- **Status:** Phase 10 verified, ready for Phase 11
+- **Last activity:** 2026-01-26 — Phase 10 verified (9/9 must-haves passed)
 
-**Progress:** ░░░░░░░░░░░░░░░░░░ 0/5 milestone 3 phases complete (0%)
-**Next:** Define requirements then create roadmap
+**Progress:** [████                ] 1/5 milestone 3 phases complete (20%)
+**Next:** `/gsd:discuss-phase 11`
+
+## Milestone 3 Phases
+
+| Phase | Name | Requirements | Status |
+|-------|------|--------------|--------|
+| 10 | Output Polish | UX-01 to UX-07 | Complete |
+| 11 | Priority Transparency | PRI-01 to PRI-05 | Pending |
+| 12 | Sprint Intelligence | SPR-01 to SPR-06 | Pending |
+| 13 | Ticket Research | RSH-01 to RSH-05 | Pending |
+| 14 | Decision Support | DEC-01 to DEC-05 | Pending |
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -99,7 +113,7 @@
 - CLI outputs XML data, skill instructs Claude to apply visual formatting
 - Pin/unpin operations execute workflow to validate item exists before modifying pins
 - Default item type is work_item for CLI convenience (PRs require --type=pull_request)
-- Visual delta markers: 📌 (pinned), 🆕 (new), ↑ (changed), ✅ (done), → (unchanged)
+- Visual delta markers: pinned, new, changed, done, unchanged icons
 - EOD summaries persist to separate ~/.ops/history/eod/ directory for cleaner organization
 - BriefingItem schema reused in EOD types for consistency between morning and EOD
 - Carryover reason enum: blocked, deprioritized, no_time, partially_complete
@@ -116,10 +130,20 @@
 - Personal journal tone in /ops:eod skill (first person, reflective, honest)
 - Escalation threshold at 3+ days blocked with suggested actions
 - EOD workflow follows priorities-workflow pattern (not morning-workflow)
+- Use Unicode escape sequences for emoji in TypeScript for encoding safety
+- Formatter layer separation: src/formatters/ module for all presentation logic
+- Type-safe emoji vocabulary: EMOJI const with EmojiKey type
+- Width-aware truncation: truncateTitle() respects visual width via string-width
+- Tables return placeholder text for empty arrays (e.g., "_No work items_")
+- Skill formatting uses boxen-style headers for major sections, dashed separators for subsections
+- Emoji vocabulary: red P1, orange P2, yellow P3 for priority (traffic light)
+- Delta emoji: green new, up arrow changed up, down arrow changed down, dash unchanged
+- EOD blockers use warning emoji for 3+ days (escalation needed), stop sign for < 3 days
+- Leadership tone guidelines for status skill: concise, factual, health indicators first
 
 ## Session Continuity
-- **Last session:** 2026-01-26 17:45 UTC
-- **Stopped at:** Phase 9 verified complete, Milestone 2 complete
+- **Last session:** 2026-01-26
+- **Stopped at:** Completed 10-02-PLAN.md (skill output formatting)
 - **Resume file:** None
 
 ## Pending TODOs

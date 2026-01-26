@@ -277,3 +277,25 @@ export type PriorityChange = z.infer<typeof PriorityChangeSchema>;
  * Inferred TypeScript type for a priority delta.
  */
 export type PriorityDelta = z.infer<typeof PriorityDeltaSchema>;
+
+/**
+ * Schema for a single override (boost or demote).
+ */
+export const OverrideSchema = z.object({
+  id: z.number(),
+  type: z.enum(['work_item', 'pull_request']),
+  amount: z.number(), // positive for boost, negative for demote
+  expires_at: z.string(), // ISO timestamp
+  created_at: z.string(),
+});
+
+/**
+ * Schema for the overrides file at ~/.ops/overrides.json.
+ */
+export const OverridesFileSchema = z.object({
+  version: z.literal(1),
+  overrides: z.array(OverrideSchema),
+});
+
+export type Override = z.infer<typeof OverrideSchema>;
+export type OverridesFile = z.infer<typeof OverridesFileSchema>;
