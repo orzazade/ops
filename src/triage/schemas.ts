@@ -89,3 +89,67 @@ export type BriefingItem = z.infer<typeof BriefingItemSchema>;
  * Inferred TypeScript type for the complete briefing.
  */
 export type Briefing = z.infer<typeof BriefingSchema>;
+
+/**
+ * Schema for a single response option.
+ * Represents one approach to responding to a briefing item.
+ */
+export const ResponseOptionSchema = z.object({
+  /**
+   * Short descriptive label for this option.
+   * Example: "Detailed", "Brief", "Action-focused"
+   */
+  label: z.string(),
+
+  /**
+   * Tone level for this response option.
+   * Formal for VIP communication, casual for peers.
+   */
+  tone: z.enum(['formal', 'balanced', 'casual']),
+
+  /**
+   * Complete response text, ready to send.
+   * This is the full message that can be copied/sent directly.
+   */
+  text: z.string(),
+
+  /**
+   * Explanation of why this approach works for the situation.
+   * Helps the user understand the rationale behind this option.
+   */
+  rationale: z.string(),
+});
+
+/**
+ * Schema for the complete response draft output.
+ * Contains multiple response options and context notes.
+ */
+export const ResponseDraftSchema = z.object({
+  /**
+   * Summary of the situation requiring response.
+   * Brief (1-2 sentences) overview of the context.
+   */
+  summary: z.string(),
+
+  /**
+   * Response options with different approaches.
+   * Contains 2-3 distinct options for the user to choose from.
+   */
+  options: z.array(ResponseOptionSchema).min(2).max(3),
+
+  /**
+   * Important context factors considered during generation.
+   * Examples: VIP status, urgency level, priority indicators.
+   */
+  context_notes: z.array(z.string()),
+});
+
+/**
+ * Inferred TypeScript type for a response option.
+ */
+export type ResponseOption = z.infer<typeof ResponseOptionSchema>;
+
+/**
+ * Inferred TypeScript type for a response draft.
+ */
+export type ResponseDraft = z.infer<typeof ResponseDraftSchema>;
