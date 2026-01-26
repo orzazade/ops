@@ -299,3 +299,13 @@ export const OverridesFileSchema = z.object({
 
 export type Override = z.infer<typeof OverrideSchema>;
 export type OverridesFile = z.infer<typeof OverridesFileSchema>;
+
+/**
+ * Schema for custom rules file at ~/.ops/rules.json.
+ */
+export const CustomRulesSchema = z.object({
+  priorities: z.record(z.string(), z.number()),
+  updated_at: z.string(),
+});
+
+export type CustomRules = z.infer<typeof CustomRulesSchema>;

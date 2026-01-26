@@ -13,3 +13,4 @@ export * from './utils.js';
 export * from './table.js';
 export * from './section.js';
 export * from './score-explainer.js';
+export * from './rules-table.js';
