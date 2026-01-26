@@ -3,7 +3,7 @@ import { Result, ok, err } from 'neverthrow';
 /**
  * Represents an allocation of tokens to a named section
  */
-interface Allocation {
+export interface Allocation {
   tokens: number;
   priority: number;
 }
@@ -117,5 +117,32 @@ export class TokenBudget {
         shortfall
       )
     );
+  }
+
+  /**
+   * Removes a section from allocations and frees its tokens
+   *
+   * @returns true if section existed and was removed, false otherwise
+   */
+  deallocate(section: string): boolean {
+    const allocation = this.allocations.get(section);
+    if (!allocation) {
+      return false;
+    }
+
+    this.allocations.delete(section);
+    this._used -= allocation.tokens;
+    return true;
+  }
+
+  /**
+   * Returns all current allocations for stats/debugging
+   */
+  getAllocations(): Array<{ name: string; tokens: number; priority: number }> {
+    return Array.from(this.allocations.entries()).map(([name, alloc]) => ({
+      name,
+      tokens: alloc.tokens,
+      priority: alloc.priority,
+    }));
   }
 }

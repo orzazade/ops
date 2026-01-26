@@ -17,3 +17,6 @@ export type {
 
 // Export utility functions
 export { escapeXml, truncateText } from './utils.js';
+
+// Export token budget management
+export { TokenBudget, OverflowError, type Allocation } from './token-budget.js';
