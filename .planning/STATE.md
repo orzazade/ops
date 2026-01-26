@@ -3,12 +3,12 @@
 ## Current Position
 - **Milestone:** 2 (Core Skills v1.0)
 - **Phase:** 9 (End-of-Day Summary) - IN PROGRESS
-- **Plan:** 1 of 3 (Types and Persistence) - COMPLETE
-- **Status:** Phase 9 plan 1 complete (3/3 tasks)
-- **Last activity:** 2026-01-26 - Completed 09-01-PLAN.md
+- **Plan:** 2 of 3 (Core Analysis Modules) - COMPLETE
+- **Status:** Phase 9 plan 2 complete (3/3 tasks)
+- **Last activity:** 2026-01-26 - Completed 09-02-PLAN.md
 
 **Progress:** █████████████████ 5/6 milestone 2 phases complete (83.3%)
-**Next:** Phase 9 plan 2 (EOD Generator) ready for execution
+**Next:** Phase 9 plan 3 (EOD Workflow Orchestrator) ready for execution
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -105,10 +105,16 @@
 - Carryover reason enum: blocked, deprioritized, no_time, partially_complete
 - Blocker age tracking with blockedSince and daysBlocked fields
 - GSD progress tracking captures progressDelta, newPhasesCompleted, currentPhase
+- Accomplishment detection reuses calculateDelta for O(n+m) performance
+- Blocker age increments daily via yesterday's EOD comparison
+- Escalation suggestions at 3+ days blocked threshold
+- Carryover reason priority: blocked > partially_complete > deprioritized > no_time
+- Pure function versions (calculateBlockerAgeWithYesterday) enable testing without async
+- Evidence field explains inference reasoning for transparency
 
 ## Session Continuity
-- **Last session:** 2026-01-26 16:49 UTC
-- **Stopped at:** Completed 09-01-PLAN.md (EOD Types and Persistence)
+- **Last session:** 2026-01-26 17:29 UTC
+- **Stopped at:** Completed 09-02-PLAN.md (Core Analysis Modules)
 - **Resume file:** None
 
 ## Pending TODOs
