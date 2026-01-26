@@ -24,6 +24,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
     "azure-devops-node-api": "^15.1.2",
     "fast-glob": "^3.3.3",
     "neverthrow": "^8.2.0",
