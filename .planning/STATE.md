@@ -6,13 +6,13 @@
 
 ## Current Position
 - **Milestone:** 3 (UX Polish & Sprint Intelligence v1.1)
-- **Phase:** 12 (Sprint Intelligence) — IN PROGRESS
-- **Plan:** 12-03 complete (ADO move operations and TUI display)
-- **Status:** Plan 03 of 06 complete
-- **Last activity:** 2026-01-26 — Completed 12-03-PLAN.md (ADO move operations and TUI display)
+- **Phase:** 13 (Ticket Research) — IN PROGRESS
+- **Plan:** 1 of 5 complete (13-01-PLAN.md)
+- **Status:** Wave 1 complete - foundation layer ready
+- **Last activity:** 2026-01-26 — Completed 13-01-PLAN.md (Ticket Research Foundation)
 
-**Progress:** [████████            ] 2/5 milestone 3 phases complete (40%)
-**Next:** `/gsd:execute-phase 12 04`
+**Progress:** [████████████        ] 3/5 milestone 3 phases complete (60%)
+**Next:** Wave 2 investigator implementations (13-02, 13-03, 13-04)
 
 ## Milestone 3 Phases
 
@@ -20,8 +20,8 @@
 |-------|------|--------------|--------|
 | 10 | Output Polish | UX-01 to UX-07 | Complete |
 | 11 | Priority Transparency | PRI-01 to PRI-05 | Complete |
-| 12 | Sprint Intelligence | SPR-01 to SPR-06 | In Progress (3/6) |
-| 13 | Ticket Research | RSH-01 to RSH-05 | Pending |
+| 12 | Sprint Intelligence | SPR-01 to SPR-06 | Complete |
+| 13 | Ticket Research | RSH-01 to RSH-05 | In Progress (1/5) |
 | 14 | Decision Support | DEC-01 to DEC-05 | Pending |
 
 ## Accumulated Decisions
@@ -167,10 +167,14 @@
 - Progress callbacks optional for CLI and programmatic operations
 - Color-coded capacity thresholds: green <80%, yellow 80-100%, red >100%, bright red >120%
 - suppressNotifications=true on ADO updates to avoid email spam during batch operations
+- Investigator interface accepts context parameter (ticket ID, project, org, repo paths)
+- WorkItemWithRelations uses Map for relationship types tracking
+- WIQL keyword search uses CONTAINS operator for flexible substring matching
+- diff and simple-git packages for code analysis in investigators
 
 ## Session Continuity
-- **Last session:** 2026-01-26T18:17:20Z
-- **Stopped at:** Completed 12-03-PLAN.md (ADO move operations and TUI display)
+- **Last session:** 2026-01-26
+- **Stopped at:** Completed 13-01-PLAN.md
 - **Resume file:** None
 
 ## Pending TODOs
