@@ -2,12 +2,13 @@
 
 ## Current Position
 - **Milestone:** 2 (Core Skills v1.0)
-- **Phase:** 8 (Priority Re-ranking) - COMPLETE
-- **Plan:** 3 of 3 - COMPLETE
-- **Status:** Phase 8 complete (priorities CLI and skill)
-- **Last activity:** 2026-01-26 - Completed 08-03-PLAN.md (Priorities CLI and skill)
+- **Phase:** 9 (End-of-Day Summary) - IN PROGRESS
+- **Plan:** 1 of 3 (Types and Persistence) - COMPLETE
+- **Status:** Phase 9 plan 1 complete (3/3 tasks)
+- **Last activity:** 2026-01-26 - Completed 09-01-PLAN.md
 
-**Progress:** ████████████████ 4/4 phases complete (100.0%)
+**Progress:** █████████████████ 5/6 milestone 2 phases complete (83.3%)
+**Next:** Phase 9 plan 2 (EOD Generator) ready for execution
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -99,10 +100,15 @@
 - Pin/unpin operations execute workflow to validate item exists before modifying pins
 - Default item type is work_item for CLI convenience (PRs require --type=pull_request)
 - Visual delta markers: 📌 (pinned), 🆕 (new), ↑ (changed), ✅ (done), → (unchanged)
+- EOD summaries persist to separate ~/.ops/history/eod/ directory for cleaner organization
+- BriefingItem schema reused in EOD types for consistency between morning and EOD
+- Carryover reason enum: blocked, deprioritized, no_time, partially_complete
+- Blocker age tracking with blockedSince and daysBlocked fields
+- GSD progress tracking captures progressDelta, newPhasesCompleted, currentPhase
 
 ## Session Continuity
-- **Last session:** 2026-01-26 12:09 UTC
-- **Stopped at:** Completed 08-03-PLAN.md (priorities CLI and skill)
+- **Last session:** 2026-01-26 16:49 UTC
+- **Stopped at:** Completed 09-01-PLAN.md (EOD Types and Persistence)
 - **Resume file:** None
 
 ## Pending TODOs
