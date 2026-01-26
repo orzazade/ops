@@ -28,3 +28,6 @@ export {
 
 // Export token budget management
 export { TokenBudget, OverflowError, type Allocation } from './token-budget.js';
+
+// Export section builders
+export * from './sections/index.js';
