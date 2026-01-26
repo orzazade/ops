@@ -17,3 +17,5 @@ export type {
   InvestigationSummary,
   WorkItemUpdate,
 } from './types.js';
+
+export { TicketInvestigator } from './ticket-investigator.js';
