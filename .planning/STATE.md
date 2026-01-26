@@ -2,12 +2,12 @@
 
 ## Current Position
 - **Milestone:** 2 (Core Skills v1.0)
-- **Phase:** 7 (Response Drafting Skill) - IN PROGRESS
-- **Plan:** 1 of 2
-- **Status:** Phase 7 Plan 1 complete (Response Generator), ready for Plan 2
-- **Last activity:** 2026-01-26 - Completed 07-01-PLAN.md (Response Generator)
+- **Phase:** 8 (Priority Re-ranking) - IN PROGRESS
+- **Plan:** 1 of 2 - COMPLETE
+- **Status:** Phase 8 Plan 1 complete (delta calculator and pin storage)
+- **Last activity:** 2026-01-26 - Completed 08-01-PLAN.md (Core logic)
 
-**Progress:** █████████░░░░░░░ 2.25/4 phases complete (56%)
+**Progress:** ███████████░░░░░ 2.625/4 phases complete (65.6%)
 
 ## Accumulated Decisions
 - Config uses `azure` key (not `azure_devops`)
@@ -82,10 +82,19 @@
 - Manual Zod-to-JSON-Schema conversion for response drafts (simple schemas don't need library)
 - ResponseContext interface separates item data from recipient metadata
 - buildToneGuidance() provides explicit tone instructions for Claude (VIP vs peer)
+- Respond workflow loads today's briefing with yesterday fallback
+- VIP detection uses case-insensitive partial matching against config.vips
+- Recipient extraction uses pattern matching (@mention, assigned to, from, by)
+- Respond CLI outputs XML for Claude Code skill to format
+- Skills installed globally to ~/.claude/commands/ops/ for cross-project access
+- Map-based O(1) lookups for delta calculation performance (vs O(n*m) nested loops)
+- Pins persist to ~/.ops/pins.json with version field for schema evolution
+- Graceful degradation returns empty array on missing/corrupt pins file
+- Set-based lookups for O(1) pin membership checks in applyPins()
 
 ## Session Continuity
-- **Last session:** 2026-01-26 14:59 UTC
-- **Stopped at:** Completed 07-01-PLAN.md (Response Generator)
+- **Last session:** 2026-01-26 11:58 UTC
+- **Stopped at:** Completed 08-01-PLAN.md (delta calculator and pin storage)
 - **Resume file:** None
 
 ## Pending TODOs
