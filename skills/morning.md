@@ -34,6 +34,7 @@ Analyze the `<morning-data>` output and generate a briefing with:
 
 2. **Top 5 Priorities**: Select the 5 highest-scored items. For each:
    - Title and type (work_item or pull_request)
+   - Score hint showing top applied rules (e.g., "P1+VIP", "VIP+blocking")
    - Why it's a priority (based on applied rules like vip_involvement, p1_priority)
    - Suggested action
 
@@ -57,7 +58,7 @@ Present the briefing in this format:
 
 ## Top Priorities
 
-1. **[Title]** (work_item/pull_request)
+1. **[Title]** (work_item/pull_request) _(P1+VIP)_
    - Priority reason: [why from rules]
    - Action: [what to do]
 
@@ -83,7 +84,9 @@ Items are scored based on these rules (higher = more urgent):
 - **p1_priority**: Priority 1 work items (critical)
 - **p2_priority**: Priority 2 work items (high)
 - **vip_involvement**: Assigned to or from VIP contacts
+- **Score hints**: Each item shows abbreviated applied rules (e.g., P1+VIP, VIP+blocking)
 - Items are sorted by score descending
+- Run `/ops:why <id>` for detailed score breakdown
 </scoring-rules>
 
 <troubleshooting>

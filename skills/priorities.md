@@ -45,7 +45,7 @@ Pins: [N pinned]
 
 [For each priority item:]
 
-[N]. [📌 if pinned][🆕 if new][✅ if completed][↑ if changed] [Title]
+[N]. [📌 if pinned][🆕 if new][✅ if completed][↑ if changed] [Title] _(P1+VIP)_
     ID: #[id] | Type: [work_item/pull_request]
     Priority: [reason]
 
@@ -102,8 +102,15 @@ If the user asks "what changed?", focus on the delta summary:
 - Highlight new items with full context
 - Explain what caused priority changes
 - Note completed items as achievements
+- Use `/ops:why <id>` to show detailed score breakdown for specific items
 
 </process>
+
+<score-hints>
+Each priority item shows a score hint in parentheses (e.g., "P1+VIP", "VIP+blocking") indicating the top scoring rules that apply.
+
+To see full score breakdown for any item: `/ops:why <id>`
+</score-hints>
 
 <examples>
 
@@ -121,11 +128,11 @@ Baseline: bootstrap (2026-01-26T12:05:00Z)
 Delta: Fresh priorities generated
 Pins: 0 pinned
 
-1. Fix critical authentication bug in login flow
+1. Fix critical authentication bug in login flow _(P1+VIP)_
    ID: #1234 | Type: work_item
    Priority: P1 work item with VIP involvement
 
-2. Review payment integration PR from Jane
+2. Review payment integration PR from Jane _(VIP)_
    ID: #567 | Type: pull_request
    Priority: Pull request by VIP Jane
 
@@ -150,19 +157,19 @@ Baseline: today (2026-01-26T07:30:00Z)
 Delta: +2 new | ↑1 changed | -1 completed | →1 unchanged
 Pins: 1 pinned
 
-1. **📌 Fix critical authentication bug in login flow**
+1. **📌 Fix critical authentication bug in login flow** _(P1+VIP)_
    ID: #1234 | Type: work_item
    Priority: P1 work item with VIP involvement
 
-2. 🆕 Urgent deployment blocker - API timeout
+2. 🆕 Urgent deployment blocker - API timeout _(P1)_
    ID: #1235 | Type: work_item
    Priority: P1 work item
 
-3. ↑ Review payment integration PR from Jane
+3. ↑ Review payment integration PR from Jane _(VIP)_
    ID: #567 | Type: pull_request
    Priority: Pull request by VIP Jane (previously: Pull request review)
 
-4. → Update documentation for new API
+4. → Update documentation for new API _(P2)_
    ID: #890 | Type: work_item
    Priority: Documentation task
 
