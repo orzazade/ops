@@ -1,38 +1,77 @@
 # Ops Project State
 
 ## Project Reference
-- **Core Value:** AI-powered DevOps assistant for morning briefings, priority scoring, and work management
-- **Current Focus:** Claude-powered decision engine (AI reasoning vs rule-based scoring)
+
+See: .planning/PROJECT.md (updated 2026-01-27)
+
+**Core value:** Help developers start each day with clarity by surfacing the most important work and drafting responses to urgent items
+
+**Current focus:** Phase 15 - Enrichment Foundation (v1.2 Claude-Powered Decisions)
 
 ## Current Position
-- **Milestone:** 4 (Claude-Powered Decisions v1.2) — Planning
-- **Phase:** Not started (defining requirements)
-- **Plan:** —
-- **Status:** Ready to plan
-- **Last activity:** 2026-01-27 — v1.1 milestone complete, archived
 
-**Progress:** Starting fresh milestone
+Phase: 15 of 19 (Enrichment Foundation)
+Plan: 4 of TBD
+Status: In progress
+Last activity: 2026-01-27 — Completed 15-04-PLAN.md
 
-**Next:** `/gsd:new-milestone` to define v1.2 requirements and roadmap
+Progress: [████████████░░░░░░░░] 47/TBD plans complete
 
-## Accumulated Decisions
+## Performance Metrics
+
+**Velocity (v0.1-v1.1):**
+- Total plans completed: 45
+- Average duration: Not tracked (pre-metrics)
+- Total execution time: Not tracked (pre-metrics)
+
+**By Milestone:**
+
+| Milestone | Phases | Plans | Status |
+|-----------|--------|-------|--------|
+| v0.1 MVP | 1-4 | 12 | Complete |
+| v1.0 Core Skills | 5-9 | 18 | Complete |
+| v1.1 Intelligence | 10-14 | 15 | Complete |
+| v1.2 Claude Decisions | 15-19 | TBD | Ready to plan |
+
+**Recent Trend:**
+- Phase 15 Plan 01 complete: 2min duration
+- Phase 15 Plan 04 complete: 2min duration
+- Metrics tracking started for v1.2 milestone
+
+## Accumulated Context
+
+### Decisions
+
+Decisions are logged in PROJECT.md Key Decisions table.
+Recent decisions affecting current work:
+
 - Config uses `azure` key (not `azure_devops`)
 - Skills install in `~/.claude/commands/ops/`
 - State directories: `~/.ops/` (global), `.ops/` (project)
 - YAML parsing via `yaml` package, validation via Zod
 - ES modules throughout project (type: module in package.json)
 - TDD approach with red-green-refactor cycle
-- Global config at ~/.ops/config.yaml, project overrides at .ops/overrides.yaml
 - Use neverthrow Result type for type-safe error handling
 - Local timezone for time-of-day detection (not UTC)
-- npm run install:skills to sync all skills to global
+- Token estimation: 4 chars per token heuristic (15-01)
+- Text truncation: preserve sentence boundaries when possible (15-01)
+- Enrichment config: count setting defaults to 10 items (15-01)
+- Cache: node-cache with 15-minute TTL (15-04)
+- Cache keys: include changedDate (date-only) for auto-invalidation (15-04)
+- Cache config: useClones: false for performance (15-04)
+
+### Pending Todos
+
+None yet.
+
+### Blockers/Concerns
+
+None yet.
 
 ## Session Continuity
-- **Last session:** 2026-01-27
-- **Stopped at:** Completed v1.1 milestone, starting v1.2
 
-## Pending TODOs
-(none yet)
+Last session: 2026-01-27 10:34
+Stopped at: Completed 15-04-PLAN.md
+Resume file: None
 
-## Blockers/Concerns
-(none identified)
+**Next step:** Continue planning Phase 15 or move to implementation of next plan

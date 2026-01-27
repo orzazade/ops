@@ -10,11 +10,28 @@ import type { WorkItemWithRelations } from '../investigators/types.js';
 
 // Mock ADOClient
 const createMockClient = (): ADOClient => {
+  const mockGet = vi.fn();
+  const mockGetWorkItemApi = vi.fn();
+  const mockGetWorkItems = vi.fn();
+  const mockGetWorkItem = vi.fn();
+
   return {
     fetchWorkItemWithRelations: vi.fn(),
-    connection: {
-      rest: vi.fn(),
+    config: {
+      project: 'TestProject',
+      organization: 'TestOrg',
     },
+    connection: {
+      rest: {
+        client: {
+          get: mockGet,
+        },
+      },
+    },
+    getWorkItemApi: mockGetWorkItemApi.mockResolvedValue({
+      getWorkItems: mockGetWorkItems,
+      getWorkItem: mockGetWorkItem,
+    }),
   } as any;
 };
 
