@@ -2,113 +2,152 @@
 name: ops:respond
 description: Draft responses for briefing items with tone adaptation
 allowed-tools:
-  - Bash
   - Read
+  - mcp__azure-devops__wit_get_work_item
+  - mcp__azure-devops__wit_list_work_item_comments
+  - mcp__azure-devops__repo_get_pull_request_by_id
+  - mcp__azure-devops__repo_list_pull_request_threads
 ---
 
 <objective>
-Help draft professional responses for work items or pull requests from your briefing.
+Help draft professional responses for work items or pull requests.
 
 Provides 2-3 distinct response options with appropriate tone (formal for VIPs, conversational for peers).
 </objective>
 
 <process>
 
-## Step 1: Extract Item Reference
+## Step 1: Parse Item Reference
 
-Parse the user's request to identify the briefing item:
+Extract the item reference from the user's command:
 
 - By ID: "/ops:respond #123" or "/ops:respond 123"
-- By keyword: "/ops:respond review PR" or "/ops:respond Jane's PR"
+- By PR: "/ops:respond PR 456"
 
-If the identifier is ambiguous, ask the user to clarify.
+## Step 2: Load Config
 
-## Step 2: Generate Response Options
-
-Run the respond CLI to generate response drafts:
-
-```bash
-cd /Users/orkhanrzazade/Projects/scifi/ops && \
-  npx tsx src/scripts/respond-cli.ts --item="<IDENTIFIER>" 2>&1
+```
+Read ~/.ops/config.yaml
 ```
 
-The CLI will:
-- Load today's briefing (falls back to yesterday if needed)
-- Find the matching item by ID or title keyword
-- Detect VIP recipients and adapt tone accordingly
-- Generate 2-3 distinct response options via Claude AI
-- Output structured XML data
+Get organization, project, and VIP list.
 
-## Step 3: Present Response Options
+## Step 3: Fetch Item Details
 
-Parse the XML output and format it as follows:
+**For Work Item:**
+```
+mcp__azure-devops__wit_get_work_item(
+  id: {id},
+  project: "{project}",
+  expand: "relations"
+)
+```
+
+Also fetch recent comments:
+```
+mcp__azure-devops__wit_list_work_item_comments(
+  project: "{project}",
+  workItemId: {id},
+  top: 10
+)
+```
+
+**For Pull Request:**
+```
+mcp__azure-devops__repo_get_pull_request_by_id(
+  project: "{project}",
+  pullRequestId: {id}
+)
+
+mcp__azure-devops__repo_list_pull_request_threads(
+  project: "{project}",
+  pullRequestId: {id}
+)
+```
+
+## Step 4: Analyze Context
+
+From the item and comments, determine:
+
+- **Recipient**: Who needs the response?
+- **VIP Check**: Is recipient in VIP list from config?
+- **Situation**: What's being asked or discussed?
+- **Tone Required**: Formal (VIP) or Conversational (peer)?
+- **Response Type**: Status update, answer, action commitment, clarification?
+
+## Step 5: Generate Response Options
+
+Create 2-3 distinct response options:
+
+**Option 1: Direct/Concise**
+- Get to the point quickly
+- Best for busy recipients or simple questions
+
+**Option 2: Detailed/Thorough**
+- Provide context and explanation
+- Best when clarification needed
+
+**Option 3: Action-Oriented** (if applicable)
+- Focus on next steps and commitments
+- Best when action is expected
+
+For each option, adapt tone based on recipient:
+- **VIP**: Formal, respectful, concise
+- **Peer**: Conversational, collaborative
+
+## Step 6: Present Options
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- RESPONSE OPTIONS — [item title]
+ RESPONSE OPTIONS — {item title}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Summary: [situation summary]
-Recipient: [name] ([VIP: role] or [peer])
+**Summary:** {situation summary}
+**Recipient:** {name} {VIP: {role} | peer}
 
-## Option 1: [Label] ([tone])
+## Option 1: {Label} ({tone})
 
-[response text - complete and ready to send]
+{response text - complete and ready to send}
 
-> Why this works: [rationale]
+> Why this works: {rationale}
 
-## Option 2: [Label] ([tone])
+## Option 2: {Label} ({tone})
 
-[response text - complete and ready to send]
+{response text - complete and ready to send}
 
-> Why this works: [rationale]
+> Why this works: {rationale}
 
-[... Option 3 if present ...]
+## Option 3: {Label} ({tone})
 
----
-Context factors: [notes joined by ", "]
----
+{response text - complete and ready to send}
+
+> Why this works: {rationale}
+
+───────────────────────────────────────────────────────────────────
 ```
-
-**Format notes:**
-- Use the separator lines for visual clarity
-- Show recipient type clearly (VIP with role or peer)
-- Each option should be distinct in approach/style
-- Include full response text (user can copy directly)
-- Explain why each option works
-
-## Step 4: Iterate if Needed
-
-If the user wants adjustments:
-- Different tone (more/less formal)
-- Different length (brief/detailed)
-- Different focus (action-oriented, status update, question)
-
-Simply acknowledge and re-run the CLI if needed, or manually adjust based on the generated options.
 
 </process>
 
-<troubleshooting>
+<tone_guidelines>
 
-**"No briefing data available"**
-→ Run `/ops:morning` first to generate a briefing
+**For VIPs:**
+- Use full sentences, no abbreviations
+- Be respectful of their time
+- Lead with the key information
+- Avoid technical jargon unless appropriate
+- End with clear next steps if action needed
 
-**"Item not found: [identifier]"**
-→ Check the available items list in the error message
-→ Use exact ID (#123) or a more specific keyword
+**For Peers:**
+- Can be more casual and direct
+- OK to use team jargon and abbreviations
+- Can ask clarifying questions inline
+- More collaborative tone
 
-**"ANTHROPIC_API_KEY not set"**
-→ Set the environment variable: `export ANTHROPIC_API_KEY=<your-key>`
+</tone_guidelines>
 
-**"Config required"**
-→ Run `/ops:config` to set up your configuration
-
-**Empty recipient or "Team"**
-→ No specific recipient detected in the item
-→ Use generic team communication tone
-
-**No VIP detected when expected**
-→ Check config VIPs list spelling
-→ VIP matching uses partial case-insensitive matching
-
-</troubleshooting>
+<notes>
+- Each option should be distinct in approach, not just wording
+- Include full response text (user can copy directly)
+- Explain why each option works for the situation
+- If user wants adjustments, modify based on their feedback
+</notes>

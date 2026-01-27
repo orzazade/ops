@@ -1,46 +1,99 @@
 ---
 name: ops:why
-description: Show score breakdown for a specific item
+description: Show why an item has its current priority
 allowed-tools:
-  - Bash
   - Read
+  - mcp__azure-devops__wit_get_work_item
+  - mcp__azure-devops__wit_list_work_item_comments
 ---
 
 <objective>
-Show the score breakdown for a specific work item or PR, explaining why it's ranked the way it is.
+Explain why a specific work item has its current priority ranking. Shows all the signals detected and reasoning.
 </objective>
 
 <process>
 
-## Step 1: Get Item ID
+## Step 1: Parse Item ID
 
-The user provides an item ID. If not provided, ask for it.
+Extract the work item ID from the user's command (e.g., `/ops:why 1234`).
 
-## Step 2: Run Why CLI
-
-```bash
-cd /Users/orkhanrzazade/Projects/scifi/ops && npx tsx src/scripts/why-cli.ts <id> [--type=work_item|pull_request] 2>&1
-```
-
-Default type is work_item. Use --type=pull_request for PRs.
-
-## Step 3: Present Results
-
-Show the score breakdown in this format:
+## Step 2: Load Config
 
 ```
-# Score Breakdown: [Title]
+Read ~/.ops/config.yaml
+```
 
-[Prose explanation from CLI output]
+## Step 3: Fetch Full Item Details
 
-**Current rank:** #N of M items
+```
+mcp__azure-devops__wit_get_work_item(
+  id: {id},
+  project: "{project}",
+  expand: "relations"
+)
+```
 
-[If boosted/demoted]: Currently boosted/demoted by X points (expires at midnight)
+Also fetch recent comments:
+```
+mcp__azure-devops__wit_list_work_item_comments(
+  project: "{project}",
+  workItemId: {id},
+  top: 5
+)
+```
+
+## Step 4: Analyze Signals
+
+Check for all priority signals:
+
+| Signal | Check | Weight |
+|--------|-------|--------|
+| P1 Priority | priority field = 1 | High |
+| P2 Priority | priority field = 2 | Medium |
+| Blocking | has "blocks" relations | High |
+| Blocked | has "blocked by" relations | Medium |
+| VIP Involved | assignee/author in VIP list | High |
+| Due Soon | due date within 3 days | High |
+| Overdue | past due date | Very High |
+| Sprint Item | in current iteration | Medium |
+| Urgent Comments | keywords in recent comments | High |
+| Stale | no activity > 5 days | Low |
+
+## Step 5: Check Overrides
+
+```
+Read ~/.ops/state/overrides.yaml
+```
+
+Check if item has been manually boosted or demoted.
+
+## Step 6: Present Analysis
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ WHY #{id} — {title}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Signals Detected
+
+✓ P1 Priority — this is marked as critical
+✓ Blocking #5678 — "Fix login flow" is waiting on this
+✓ VIP: John Smith — assigned to your VIP contact
+✗ Due date — none set
+✗ Urgent comments — no urgent keywords found
+
+## Priority Assessment
+
+This item ranks HIGH because:
+- P1 priority indicates critical work
+- It's blocking another item, causing cascading delays
+- VIP involvement suggests organizational visibility
+
+## Overrides
+
+{None | Boosted until midnight | Demoted until midnight}
+
+───────────────────────────────────────────────────────────────────
 ```
 
 </process>
-
-<troubleshooting>
-- **Item not found**: Check if the ID is correct. Run /ops:priorities to see available items.
-- **ADO error**: Check AZURE_DEVOPS_PAT environment variable is set.
-</troubleshooting>

@@ -6,16 +6,16 @@ See: .planning/PROJECT.md (updated 2026-01-27)
 
 **Core value:** Help developers start each day with clarity by surfacing the most important work and drafting responses to urgent items
 
-**Current focus:** Phase 15 - Enrichment Foundation (v1.2 Claude-Powered Decisions)
+**Current focus:** v1.2 milestone needs redesign
 
 ## Current Position
 
-Phase: 15 of 19 (Enrichment Foundation)
-Plan: 4 of TBD
-Status: In progress
-Last activity: 2026-01-27 — Completed 15-02-PLAN.md
+Phase: 15 complete, 16-19 need redesign
+Plan: —
+Status: ⚠️ Reverted incorrect API implementation
+Last activity: 2026-01-27 — Reverted Phase 16-17 (wrong architecture)
 
-Progress: [████████████░░░░░░░░] 49/TBD plans complete
+Progress: [████████████░░░░░░░░] 50/TBD plans complete (Phase 15 done)
 
 ## Performance Metrics
 

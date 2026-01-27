@@ -2,12 +2,15 @@
 name: ops:status
 description: Generate project status report for leadership
 allowed-tools:
-  - Bash
   - Read
+  - mcp__azure-devops__wit_my_work_items
+  - mcp__azure-devops__wit_get_work_item
+  - mcp__azure-devops__repo_list_pull_requests_by_repo_or_project
+  - mcp__azure-devops__wit_get_query_results_by_id
 ---
 
 <objective>
-Generate a leadership-ready status report for a specific project by gathering data from Azure DevOps and GSD projects.
+Generate a leadership-ready status report for a specific project by gathering data from Azure DevOps.
 </objective>
 
 <process>
@@ -19,87 +22,127 @@ Get the project name from the user's command:
 - "/ops:status sku-builder" -> project = "sku-builder"
 - If no project specified, ask user which project they want status for.
 
-## Step 2: Gather Project Data
+## Step 2: Load Config
 
-Run the status CLI:
-```bash
-cd /Users/orkhanrzazade/Projects/scifi/ops && npx tsx src/scripts/status-cli.ts --project="<PROJECT_NAME>" 2>&1
+```
+Read ~/.ops/config.yaml
 ```
 
-This outputs:
-- Filtered work items and PRs for the project
-- GSD project planning data
-- Data quality tier (1=best, 4=worst)
+## Step 3: Gather Project Data
 
-## Step 3: Generate Status Report
+Fetch work items for the project:
 
-Analyze the `<status-data>` output and generate a report with:
-
-1. **Executive Summary** (2-3 sentences): High-level project health assessment
-
-2. **Overall Status**: One of: ON-TRACK, AT-RISK, DELAYED, BLOCKED
-
-3. **Key Highlights** (3-5 bullets): Recent achievements and progress
-
-4. **Risks** (if any): Each with severity (low/medium/high/critical) and mitigation
-
-5. **Blockers** (if any): What's blocking progress and action needed
-
-6. **Next Steps** (3-5 bullets): Upcoming priorities
-
-7. **Metrics** (if available):
-   - Work items completed vs in-progress
-   - PRs merged vs pending review
-
-## Step 4: Format Output
-
-Default output format is markdown. User can request:
-- **--format=email**: HTML suitable for Outlook/Gmail
-- **--format=slack**: Slack mrkdwn format
-
-Markdown format:
 ```
-# Project Status: [Project Name]
-**Date:** [date]
-**Overall Status:** [ON-TRACK/AT-RISK/DELAYED/BLOCKED]
+mcp__azure-devops__wit_my_work_items(
+  project: "{project}",
+  type: "assignedtome",
+  includeCompleted: false,
+  top: 50
+)
+```
+
+Fetch PRs:
+
+```
+mcp__azure-devops__repo_list_pull_requests_by_repo_or_project(
+  project: "{project}",
+  status: "all",
+  top: 20
+)
+```
+
+## Step 4: Filter by Project Keywords
+
+Filter work items and PRs that match the project name in:
+- Title
+- Area path
+- Tags
+- Repository name
+
+## Step 5: Analyze Project Health
+
+**Determine Overall Status:**
+
+| Status | Criteria |
+|--------|----------|
+| ON-TRACK | No blockers, work progressing, no overdue items |
+| AT-RISK | Minor blockers or 1-2 items at risk |
+| DELAYED | Multiple blockers or overdue commitments |
+| BLOCKED | Critical blocker preventing progress |
+
+**Identify:**
+- Recent completions (last 7 days)
+- Current work in progress
+- Blockers and risks
+- Upcoming priorities
+
+## Step 6: Generate Status Report
+
+```
+# Project Status: {Project Name}
+**Date:** {date}
+**Overall Status:** {ON-TRACK/AT-RISK/DELAYED/BLOCKED}
 
 ## Executive Summary
-[2-3 sentences]
+{2-3 sentences summarizing project health and key updates}
 
 ## Key Highlights
-- [achievement 1]
-- [achievement 2]
+- {achievement 1}
+- {achievement 2}
+- {achievement 3}
 
 ## Risks
 | Risk | Severity | Mitigation |
 |------|----------|------------|
-| ... | ... | ... |
+| {risk description} | {low/medium/high/critical} | {mitigation plan} |
 
 ## Blockers
-- **[blocker]**: [action needed]
+- **{blocker}**: {action needed}
 
 ## Next Steps
-- [ ] [priority 1]
-- [ ] [priority 2]
+- [ ] {priority 1}
+- [ ] {priority 2}
+- [ ] {priority 3}
 
 ## Metrics
-- Work items: X completed, Y in progress
-- Pull requests: X merged, Y pending
+- Work items: {X} completed this week, {Y} in progress
+- Pull requests: {X} merged, {Y} pending review
 
 ---
-*Data quality: Tier N/4 | Generated: [timestamp]*
+*Generated: {timestamp}*
 ```
-
-Email format: Use inline CSS, no external styles. Suitable for Outlook/Gmail.
-
-Slack format: Use Slack mrkdwn (*bold*, _italic_, `code`).
 
 </process>
 
-<troubleshooting>
-- **"AZURE_DEVOPS_PAT not set"**: Set the environment variable with your PAT token
-- **"Config required"**: Run `/ops:config` first to set up configuration
-- **"No project specified"**: Include project name: /ops:status CPQ
-- **Tier 4 (no data)**: Project name may not match ADO/GSD naming. Try variations.
-- **Empty results**: Check if work items are assigned to correct project in ADO
-</troubleshooting>
+<format_options>
+User can request different formats:
+
+**--format=email**: Generate HTML suitable for Outlook/Gmail
+**--format=slack**: Generate Slack mrkdwn format
+
+Default is markdown.
+</format_options>
+
+<status_indicators>
+
+**ON-TRACK indicators:**
+- Sprint commitments on track
+- No critical blockers
+- Recent progress visible
+
+**AT-RISK indicators:**
+- Some items slipping
+- Dependencies unclear
+- Resource constraints
+
+**DELAYED indicators:**
+- Missed sprint commitments
+- Multiple items overdue
+- Scope creep detected
+
+**BLOCKED indicators:**
+- Critical external dependency
+- Cannot proceed without resolution
+- Escalation required
+
+</status_indicators>

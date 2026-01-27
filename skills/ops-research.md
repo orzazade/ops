@@ -1,82 +1,221 @@
 ---
-name: ops-research
+name: ops:ops-research
 description: Deep-dive investigation of an Azure DevOps work item
+allowed-tools:
+  - Read
+  - Grep
+  - Glob
+  - mcp__azure-devops__wit_get_work_item
+  - mcp__azure-devops__wit_list_work_item_comments
+  - mcp__azure-devops__search_code
+  - mcp__azure-devops__search_wiki
+  - mcp__azure-devops__search_workitem
 ---
 
-# /ops:research
-
+<objective>
 Investigate a work item to understand requirements, find related code, and identify gaps.
 
-## Usage
+Produces a comprehensive research summary with:
+- Ticket quality assessment
+- Related items and context
+- Code areas affected
+- Documentation references
+- Suggested improvements
+</objective>
+
+<process>
+
+## Step 1: Parse Ticket ID
+
+Extract the work item ID from user command:
+- "/ops:ops-research 12345"
+- "/ops:ops-research #12345"
+
+## Step 2: Load Config
 
 ```
-/ops:research <ticket-id>
+Read ~/.ops/config.yaml
 ```
 
-## What This Does
+## Step 3: Fetch Work Item Details
 
-1. Fetches the work item with all relations
-2. Searches for related/similar tickets in the same area
-3. Prepares code search queries for finding implementations
-4. Prepares wiki search queries for finding documentation
-5. Analyzes ticket quality (description, acceptance criteria)
-6. Generates investigation summary with confidence level
+```
+mcp__azure-devops__wit_get_work_item(
+  id: {id},
+  project: "{project}",
+  expand: "relations,fields"
+)
+```
 
-## Instructions for Claude
+Extract:
+- Title, description, acceptance criteria
+- Type (Bug, User Story, Task, etc.)
+- Area path, iteration path
+- Relations (parent, child, related, blocks/blocked by)
+- Tags
 
-When the user runs `/ops:research <id>`:
+## Step 4: Fetch Comments
 
-1. Run the research CLI:
-   ```bash
-   cd /Users/orkhanrzazade/Projects/scifi/ops && npx ts-node src/scripts/research-cli.ts {id}
-   ```
+```
+mcp__azure-devops__wit_list_work_item_comments(
+  project: "{project}",
+  workItemId: {id},
+  top: 20
+)
+```
 
-2. The CLI outputs XML with investigation findings and search queries.
+Look for:
+- Context and history
+- Decisions made
+- Questions raised
+- Technical details
 
-3. For code search, use the Grep tool with the provided search queries:
-   ```
-   For each <query> in <code_search_queries>:
-     Use Grep tool with pattern and glob from the query
-     Report findings with file paths and relevant code snippets
-   ```
+## Step 5: Search Related Work Items
 
-4. For wiki search, use the Grep tool on any local wiki repos:
-   ```
-   For each <query> in <wiki_search_queries>:
-     Search local wiki/docs directories if available
-   ```
+```
+mcp__azure-devops__search_workitem(
+  searchText: "{keywords from title and description}",
+  project: "{project}",
+  top: 10
+)
+```
 
-5. Synthesize all findings into a summary:
-   - What the ticket is about (bug fix or feature?)
-   - What code areas are affected
-   - What's missing from the ticket (description gaps, missing ACs)
-   - Suggested improvements to the ticket
+Find similar or related tickets by:
+- Same area path
+- Similar keywords
+- Related epics/features
 
-6. If the user wants to apply changes, ask them to run:
-   ```
-   /ops:research {id} --apply
-   ```
-   This will show a diff preview and ask for confirmation before updating the ticket.
+## Step 6: Search Codebase
 
-## Example Output
+```
+mcp__azure-devops__search_code(
+  searchText: "{technical keywords}",
+  project: "{project}",
+  top: 10
+)
+```
 
-Investigation for ticket #12345:
+Also use local search if in a repo:
 
-### Ticket Quality
-- Description: Needs improvement (too brief)
-- Acceptance Criteria: Missing
+```
+Grep for relevant patterns
+Glob for related file patterns
+```
 
-### Related Items
-- #12340 (Parent): "Epic: Pricing Engine"
-- #12342 (Related): "Fix discount calculation"
+Identify:
+- Files likely affected
+- Existing implementations
+- Test coverage
 
-### Code Areas
-Found implementations in:
-- src/pricing/calculator.ts (lines 45-78)
-- src/pricing/discount-rules.ts (lines 12-30)
+## Step 7: Search Wiki/Documentation
 
-### Suggested Changes
-1. Add detailed description explaining the pricing calculation issue
-2. Add acceptance criteria:
-   - Given a product with 10% discount, when calculating price...
-   - Error case: when discount > 100%...
+```
+mcp__azure-devops__search_wiki(
+  searchText: "{feature keywords}",
+  project: "{project}",
+  top: 5
+)
+```
+
+Find:
+- Design documents
+- Architecture decisions
+- Related specifications
+
+## Step 8: Assess Ticket Quality
+
+Evaluate:
+
+| Aspect | Status | Notes |
+|--------|--------|-------|
+| Description | {Good/Needs work/Missing} | {details} |
+| Acceptance Criteria | {Complete/Partial/Missing} | {details} |
+| Technical Context | {Clear/Vague/Missing} | {details} |
+| Reproducibility (bugs) | {Clear/Vague/N/A} | {details} |
+| Definition of Done | {Clear/Implicit/Missing} | {details} |
+
+## Step 9: Generate Investigation Summary
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ INVESTIGATION: #{id} — {title}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## Summary
+
+**Type:** {Bug/Feature/Task}
+**Area:** {area path}
+**Confidence:** {High/Medium/Low} — {reasoning}
+
+{2-3 sentence summary of what this ticket is about}
+
+## Ticket Quality
+
+| Aspect | Status |
+|--------|--------|
+| Description | {status} |
+| Acceptance Criteria | {status} |
+| Technical Context | {status} |
+
+**Gaps identified:**
+- {gap 1}
+- {gap 2}
+
+## Related Items
+
+| Relation | ID | Title |
+|----------|:---|:------|
+| Parent | #{id} | {title} |
+| Related | #{id} | {title} |
+| Similar | #{id} | {title} |
+
+## Code Areas
+
+**Files likely affected:**
+- `{path/to/file.ts}` — {reasoning}
+- `{path/to/file.ts}` — {reasoning}
+
+**Existing implementations:**
+- {description of related code}
+
+## Documentation
+
+- {Wiki page}: {relevance}
+- {Design doc}: {relevance}
+
+## Suggested Improvements
+
+1. **{suggestion}**: {details}
+2. **{suggestion}**: {details}
+
+───────────────────────────────────────────────────────────────────
+```
+
+</process>
+
+<confidence_levels>
+
+**High confidence:**
+- Clear description and acceptance criteria
+- Found related code and documentation
+- Similar tickets provide context
+
+**Medium confidence:**
+- Some gaps in description or ACs
+- Found some related code
+- May need clarification on scope
+
+**Low confidence:**
+- Vague or missing description
+- No clear acceptance criteria
+- Can't identify code areas
+- Recommend discussion with author
+
+</confidence_levels>
+
+<notes>
+- Investigation is read-only (no changes to ticket)
+- Use findings to plan implementation
+- Share summary with team for context
+- Consider updating ticket with findings
+</notes>

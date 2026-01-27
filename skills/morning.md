@@ -1,97 +1,143 @@
 ---
 name: ops:morning
-description: Generate your morning work briefing from Azure DevOps and GSD projects
+description: Generate your morning work briefing from Azure DevOps
 allowed-tools:
-  - Bash
   - Read
+  - mcp__azure-devops__wit_my_work_items
+  - mcp__azure-devops__wit_get_work_item
+  - mcp__azure-devops__wit_list_work_item_comments
+  - mcp__azure-devops__repo_list_pull_requests_by_repo_or_project
 ---
 
 <objective>
-Generate a prioritized morning briefing by gathering data from Azure DevOps (work items, PRs) and GSD projects, then producing a summary of top priorities and items needing response.
+Generate a prioritized morning briefing by gathering your work items and PRs from Azure DevOps, then reasoning about what deserves your attention first.
 </objective>
 
 <process>
 
-## Step 1: Gather Data
+## Step 1: Load Config
 
-Run the morning CLI to gather and score work data:
+Read the ops config to get organization, project, and VIPs:
 
-```bash
-cd /Users/orkhanrzazade/Projects/scifi/ops && npx tsx src/scripts/morning-cli.ts 2>&1
+```
+Read ~/.ops/config.yaml
 ```
 
-This will output:
-- Scored items from Azure DevOps (work items, PRs)
-- Context from GSD projects
-- Yesterday's briefing summary if available
-- Data quality tier (1=best, 5=worst)
+If no config exists, tell user to run `/ops:config` first.
 
-## Step 2: Generate Briefing
+## Step 2: Fetch Work Items
 
-Analyze the `<morning-data>` output and generate a briefing with:
+Use the Azure DevOps MCP tools to get your assigned work items:
 
-1. **Summary** (2-3 sentences): Overview of your day's priorities based on the scored items
+```
+mcp__azure-devops__wit_my_work_items(
+  project: "{project from config}",
+  type: "assignedtome",
+  includeCompleted: false,
+  top: 20
+)
+```
 
-2. **Top 5 Priorities**: Select the 5 highest-scored items. For each:
-   - Title and type (work_item or pull_request)
-   - Score hint showing top applied rules (e.g., "P1+VIP", "VIP+blocking")
-   - Why it's a priority (based on applied rules like vip_involvement, p1_priority)
-   - Suggested action
+## Step 3: Fetch PRs Where You're Reviewer
 
-3. **Items Needing Response** (up to 3): Items where you need to respond or act. Draft a suggested response for each.
+```
+mcp__azure-devops__repo_list_pull_requests_by_repo_or_project(
+  project: "{project}",
+  i_am_reviewer: true,
+  status: "Active",
+  top: 10
+)
+```
 
-4. **Blockers/Risks**: Any concerning patterns (overdue items, blocked work, etc.)
+## Step 4: Enrich Top Items (Optional)
 
-5. **Carryover**: If yesterday's data exists, note items that carried over
+For the top 5-7 items by your initial assessment, fetch comments to understand urgency:
 
-## Step 3: Format Output
+```
+mcp__azure-devops__wit_list_work_item_comments(
+  project: "{project}",
+  workItemId: {id},
+  top: 5
+)
+```
 
-Present the briefing in this format:
+Look for urgency signals in comments like:
+- "blocking", "blocked", "urgent", "ASAP"
+- Questions from VIPs
+- Due date mentions
+
+## Step 5: Reason About Priorities
+
+Analyze all items and determine the top 5 priorities based on:
+
+**High Priority Signals:**
+- P1 or P2 priority field
+- Blocking other work (has "blocks" relationships)
+- Due date within 3 days
+- VIP involvement (from config)
+- Urgent keywords in recent comments
+- Sprint commitment (in current iteration)
+
+**Medium Priority Signals:**
+- Active PR reviews (someone waiting on you)
+- Items older than 5 days
+- Has child items depending on it
+
+**Lower Priority:**
+- Backlog items not in sprint
+- Items with no recent activity
+
+## Step 6: Format Output
+
+Present the briefing:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- MORNING BRIEFING — [date]
+ MORNING BRIEFING — {date}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ## Summary
-[2-3 sentence overview]
+
+{2-3 sentences: what's most important today and why}
 
 ## Top Priorities
 
-1. **[Title]** (work_item/pull_request) _(P1+VIP)_
-   - Priority reason: [why from rules]
-   - Action: [what to do]
+1. **{Title}** #{id} _{signals}_
+   Why: {reasoning based on signals detected}
+   Action: {suggested next step}
 
 2. ...
 
 ## Needs Response
 
-1. **[Title]**
-   - Suggested response: [draft]
+{Items with questions or comments needing your reply}
 
-## Blockers & Risks
-- [any blockers or risks identified]
+## PRs to Review
+
+{Active PRs where you're a reviewer}
 
 ───────────────────────────────────────────────────────────────────
-Data quality: Tier [N]/5 | Generated: [timestamp]
+{N} work items | {M} PRs | Generated: {timestamp}
 ───────────────────────────────────────────────────────────────────
 ```
 
 </process>
 
-<scoring-rules>
-Items are scored based on these rules (higher = more urgent):
-- **p1_priority**: Priority 1 work items (critical)
-- **p2_priority**: Priority 2 work items (high)
-- **vip_involvement**: Assigned to or from VIP contacts
-- **Score hints**: Each item shows abbreviated applied rules (e.g., P1+VIP, VIP+blocking)
-- Items are sorted by score descending
-- Run `/ops:why <id>` for detailed score breakdown
-</scoring-rules>
+<reasoning_guidelines>
+When deciding priority order, explain your reasoning:
+- "This is #1 because it's P1 AND blocking two other items"
+- "Moved up because John (VIP) asked about status yesterday"
+- "Lower priority - backlog item, no due date, no recent activity"
 
-<troubleshooting>
-- **"AZURE_DEVOPS_PAT not set"**: Set the environment variable with your PAT token
-- **"Config required"**: Run `/ops:config` first to set up configuration
-- **Tier 5 (no data)**: Check network connection and credentials
-- **Build errors**: Run `npm run build` in the ops directory first
-</troubleshooting>
+Be specific about WHY items are prioritized, not just WHAT the priority is.
+</reasoning_guidelines>
+
+<state>
+After generating the briefing, save it for delta comparison later:
+
+```
+Write to ~/.ops/state/briefing-{date}.yaml
+```
+
+This enables `/ops:priorities` to show what changed since morning.
+</state>
