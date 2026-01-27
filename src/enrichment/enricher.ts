@@ -15,6 +15,12 @@ import type { OpsConfig } from '../config/schema.js';
 import type { EnrichmentResult, EnrichedWorkItem, EnrichedGSDItem } from './types.js';
 
 /**
+ * Token budget for enriched items.
+ * Enrichment output must fit within this limit to ensure reasonable context size.
+ */
+const TOKEN_BUDGET = 2000;
+
+/**
  * Main enrichment orchestrator.
  * Coordinates enrichment pipeline with caching and token budget enforcement.
  */
@@ -73,12 +79,11 @@ export class Enricher {
     let totalTokens = this.calculateTokens(items);
 
     // Apply token budget truncation if needed
-    const budget = 2000;
     let truncated = false;
 
-    if (totalTokens > budget) {
+    if (totalTokens > TOKEN_BUDGET) {
       truncated = true;
-      const truncatedItems = this.applyBudgetTruncation(items, budget);
+      const truncatedItems = this.applyBudgetTruncation(items, TOKEN_BUDGET);
       totalTokens = this.calculateTokens(truncatedItems);
 
       return {
