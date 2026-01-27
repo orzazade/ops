@@ -68,7 +68,7 @@ Look for urgency signals in comments like:
 
 ## Step 5: Reason About Priorities
 
-Analyze all items and determine the top 5 priorities based on:
+Analyze all items and determine the top 10 priorities based on:
 
 **High Priority Signals:**
 - P1 or P2 priority field
@@ -89,37 +89,41 @@ Analyze all items and determine the top 5 priorities based on:
 
 ## Step 6: Format Output
 
-Present the briefing:
+Present the briefing in a clean, scannable format:
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  MORNING BRIEFING — {date}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## Summary
-
-{2-3 sentences: what's most important today and why}
-
 ## Top Priorities
 
-1. **{Title}** #{id} _{signals}_
-   Why: {reasoning based on signals detected}
-   Action: {suggested next step}
-
-2. ...
-
-## Needs Response
-
-{Items with questions or comments needing your reply}
+| # | Type | ID | Title | State | Score | Reason |
+|---|------|-----|-------|-------|------:|--------|
+| 1 | Bug | #12345 | Fix login timeout | Active | 85 | P1, blocking release |
+| 2 | Task | #12346 | Review PR from Jane | New | 70 | VIP waiting |
+| 3 | Story | #12347 | Implement caching | Active | 65 | Sprint commitment |
+... (show top 10 items)
 
 ## PRs to Review
 
-{Active PRs where you're a reviewer}
+| ID | Title | Author | URL | Reason |
+|----|-------|--------|-----|--------|
+| PR-456 | Add retry logic | Jane | {pr_url} | Waiting 2 days |
 
 ───────────────────────────────────────────────────────────────────
 {N} work items | {M} PRs | Generated: {timestamp}
 ───────────────────────────────────────────────────────────────────
 ```
+
+**Format rules:**
+- Type: Bug, Task, Story, Feature (short form)
+- ID: #{number}
+- Title: Keep concise, truncate if needed
+- State: New, Active, Resolved, etc.
+- Score: 0-100 based on priority signals (P1=+30, P2=+20, VIP=+25, blocking=+20, due soon=+15, overdue=+25, sprint=+15, age=+10)
+- Reason: Brief explanation (P1, VIP, blocking, due soon, etc.)
+- URL: Full Azure DevOps URL for PRs
 
 </process>
 
