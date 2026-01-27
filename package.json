@@ -59,6 +59,7 @@
     "fast-glob": "^3.3.3",
     "markdown-table": "^3.0.4",
     "neverthrow": "^8.2.0",
+    "node-cache": "^5.1.2",
     "simple-git": "^3.30.0",
     "string-width": "^8.1.0",
     "strip-ansi": "^7.1.2",
