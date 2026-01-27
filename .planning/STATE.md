@@ -35,6 +35,7 @@ Progress: [████████████░░░░░░░░] 49/TBD 
 
 **Recent Trend:**
 - Phase 15 Plan 01 complete: 2min duration
+- Phase 15 Plan 02 complete: 3min duration
 - Phase 15 Plan 03 complete: 3min duration
 - Phase 15 Plan 04 complete: 2min duration
 - Metrics tracking started for v1.2 milestone
@@ -57,6 +58,9 @@ Recent decisions affecting current work:
 - Token estimation: 4 chars per token heuristic (15-01)
 - Text truncation: preserve sentence boundaries when possible (15-01)
 - Enrichment config: count setting defaults to 10 items (15-01)
+- Comments via REST API: not in TypeScript client (15-02)
+- Relation type mapping: simplified to 5 types (15-02)
+- Graceful degradation: return empty/null for failed fetches (15-02)
 - Cache: node-cache with 15-minute TTL (15-04)
 - Cache keys: include changedDate (date-only) for auto-invalidation (15-04)
 - Cache config: useClones: false for performance (15-04)
@@ -75,7 +79,7 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-01-27 10:35
-Stopped at: Completed 15-03-PLAN.md
+Stopped at: Completed 15-02-PLAN.md
 Resume file: None
 
-**Next step:** Continue planning Phase 15 or move to implementation of next plan
+**Next step:** Continue with remaining Phase 15 plans
