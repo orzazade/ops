@@ -30,15 +30,15 @@ export class GSDEnricher {
 
     // Extract data from each file
     const goalDescription = files.plan
-      ? await this.extractGoal(files.plan)
+      ? this.extractGoal(files.plan)
       : null;
 
     const summary = files.summary
-      ? await this.extractSummary(files.summary)
+      ? this.extractSummary(files.summary)
       : null;
 
     const stateInfo = files.state
-      ? await this.parseStateFile(files.state)
+      ? this.parseStateFile(files.state)
       : { currentPhase: null, status: null };
 
     return {
@@ -60,24 +60,19 @@ export class GSDEnricher {
     summary?: string;
     state?: string;
   }> {
+    const filesToRead = [
+      { key: 'plan', filename: 'PLAN.md' },
+      { key: 'summary', filename: 'SUMMARY.md' },
+      { key: 'state', filename: 'STATE.md' },
+    ] as const;
+
     const files: { plan?: string; summary?: string; state?: string } = {};
 
-    // Check for PLAN.md in .planning/ root
-    const rootPlanPath = join(planningDir, 'PLAN.md');
-    if (await this.fileExists(rootPlanPath)) {
-      files.plan = await readFile(rootPlanPath, 'utf-8');
-    }
-
-    // Check for SUMMARY.md in .planning/ root
-    const rootSummaryPath = join(planningDir, 'SUMMARY.md');
-    if (await this.fileExists(rootSummaryPath)) {
-      files.summary = await readFile(rootSummaryPath, 'utf-8');
-    }
-
-    // Check for STATE.md (always in .planning/ root)
-    const statePath = join(planningDir, 'STATE.md');
-    if (await this.fileExists(statePath)) {
-      files.state = await readFile(statePath, 'utf-8');
+    for (const { key, filename } of filesToRead) {
+      const filePath = join(planningDir, filename);
+      if (await this.fileExists(filePath)) {
+        files[key] = await readFile(filePath, 'utf-8');
+      }
     }
 
     return files;
@@ -99,7 +94,7 @@ export class GSDEnricher {
    * Extract goal description from PLAN.md content.
    * Looks for "## Goal" section or "<objective>" XML-style tags.
    */
-  private async extractGoal(planContent: string): Promise<string | null> {
+  private extractGoal(planContent: string): string | null {
     // Try to find ## Goal section
     const goalMatch = planContent.match(/##\s+Goal\s*\n([\s\S]*?)(?=\n##|\n<|$)/);
     if (goalMatch) {
@@ -119,7 +114,7 @@ export class GSDEnricher {
    * Extract summary from SUMMARY.md content.
    * Truncates to 500 characters if needed, preserving sentence boundaries.
    */
-  private async extractSummary(summaryContent: string): Promise<string | null> {
+  private extractSummary(summaryContent: string): string | null {
     const trimmed = summaryContent.trim();
 
     if (trimmed.length <= 500) {
@@ -144,9 +139,9 @@ export class GSDEnricher {
    * Parse STATE.md content to extract current phase and status.
    * Handles the format: "Phase: 15 of 19 (Enrichment Foundation)"
    */
-  private async parseStateFile(
+  private parseStateFile(
     stateContent: string
-  ): Promise<{ currentPhase: string | null; status: string | null }> {
+  ): { currentPhase: string | null; status: string | null } {
     const result: { currentPhase: string | null; status: string | null } = {
       currentPhase: null,
       status: null,
