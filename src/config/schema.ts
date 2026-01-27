@@ -60,6 +60,12 @@ const SprintSchema = z.object({
   capacity_points: 20,
 });
 
+const EnrichmentSchema = z.object({
+  count: z.number().default(10),
+}).default({
+  count: 10,
+});
+
 export const OpsConfigSchema = z.object({
   azure: AzureSchema,
   user: UserSchema.optional(),
@@ -68,8 +74,10 @@ export const OpsConfigSchema = z.object({
   gsd: GsdSchema,
   preferences: PreferencesSchema,
   sprint: SprintSchema,
+  enrichment: EnrichmentSchema,
 });
 
 export type OpsConfig = z.infer<typeof OpsConfigSchema>;
 export type ADOConfig = z.infer<typeof AzureSchema>;
 export type SprintConfig = z.infer<typeof SprintSchema>;
+export type EnrichmentConfig = z.infer<typeof EnrichmentSchema>;

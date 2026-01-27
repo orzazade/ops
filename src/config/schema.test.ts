@@ -34,4 +34,25 @@ describe('OpsConfigSchema', () => {
     };
     expect(() => OpsConfigSchema.parse(config)).toThrow();
   });
+
+  it('applies default enrichment.count of 10', () => {
+    const config = { azure: { organization: 'Appxite' } };
+    const result = OpsConfigSchema.parse(config);
+    expect(result.enrichment.count).toBe(10);
+  });
+
+  it('respects custom enrichment.count', () => {
+    const config = {
+      azure: { organization: 'Appxite' },
+      enrichment: { count: 25 }
+    };
+    const result = OpsConfigSchema.parse(config);
+    expect(result.enrichment.count).toBe(25);
+  });
+
+  it('uses default enrichment when section omitted', () => {
+    const config = { azure: { organization: 'Appxite' } };
+    const result = OpsConfigSchema.parse(config);
+    expect(result.enrichment).toEqual({ count: 10 });
+  });
 });
