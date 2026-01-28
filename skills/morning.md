@@ -89,9 +89,12 @@ Analyze all items and determine the top 10 priorities based on:
 
 ## Step 6: Format Output
 
-Present the briefing in a clean, scannable format:
+Present the briefing in a clean, scannable format.
 
-```
+**CRITICAL: Use proper markdown table syntax with alignment.**
+
+Output this exact structure (not in a code block):
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  MORNING BRIEFING — {date}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -99,31 +102,41 @@ Present the briefing in a clean, scannable format:
 ## Top Priorities
 
 | # | Type | ID | Title | State | Score | Reason |
-|---|------|-----|-------|-------|------:|--------|
-| 1 | Bug | #12345 | Fix login timeout | Active | 85 | P1, blocking release |
-| 2 | Task | #12346 | Review PR from Jane | New | 70 | VIP waiting |
-| 3 | Story | #12347 | Implement caching | Active | 65 | Sprint commitment |
-... (show top 10 items)
+|:--|:-----|:---|:------|:------|------:|:-------|
+| 1 | Bug | #12345 | Fix login timeout | Active | 85 | P1, blocking |
+| 2 | Task | #12346 | Review PR | New | 70 | VIP waiting |
+| 3 | Story | #12347 | Add caching | Active | 65 | Sprint |
 
 ## PRs to Review
 
-| ID | Title | Author | URL | Reason |
-|----|-------|--------|-----|--------|
-| PR-456 | Add retry logic | Jane | {pr_url} | Waiting 2 days |
+| PR | Title | Author | Waiting | URL |
+|:---|:------|:-------|--------:|:----|
+| #456 | Add retry logic | Jane | 2d | [Link]({url}) |
 
 ───────────────────────────────────────────────────────────────────
-{N} work items | {M} PRs | Generated: {timestamp}
+{N} items | {M} PRs | {timestamp}
 ───────────────────────────────────────────────────────────────────
-```
 
-**Format rules:**
-- Type: Bug, Task, Story, Feature (short form)
-- ID: #{number}
-- Title: Keep concise, truncate if needed
-- State: New, Active, Resolved, etc.
-- Score: 0-100 based on priority signals (P1=+30, P2=+20, VIP=+25, blocking=+20, due soon=+15, overdue=+25, sprint=+15, age=+10)
-- Reason: Brief explanation (P1, VIP, blocking, due soon, etc.)
-- URL: Full Azure DevOps URL for PRs
+**Column specifications:**
+- **#**: Row number (1-10)
+- **Type**: Bug, Task, Story, Feature
+- **ID**: #{number}
+- **Title**: Truncate to ~30 chars if needed
+- **State**: New, Active, Resolved
+- **Score**: 0-100, right-aligned
+- **Reason**: Brief (P1, VIP, blocking, due, sprint)
+- **Waiting**: Days as PR reviewer
+- **URL**: Markdown link
+
+**Scoring weights:**
+- P1 priority: +30
+- Overdue: +25
+- VIP involved: +25
+- Blocking others: +20
+- P2 priority: +20
+- Due within 3 days: +15
+- Sprint commitment: +15
+- Age > 5 days: +10
 
 </process>
 
