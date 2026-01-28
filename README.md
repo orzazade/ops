@@ -69,8 +69,13 @@ Start your day knowing exactly what to focus on:
 | Command | Description |
 |---------|-------------|
 | `/ops:research <id>` | Deep dive with parallel research (code + web + ADO) |
+| `/ops:review-pr <url>` | Professional code review with ADO integration |
 
 ### Management
+
+| Command | Description |
+|---------|-------------|
+| `/ops:evaluate <name>` | Probation period evaluation from ADO history |
 
 | Command | Description |
 |---------|-------------|
@@ -145,11 +150,10 @@ ops/
 │   ├── why.md
 │   ├── rules.md
 │   ├── research.md   # Parallel: code + web + ADO search
+│   ├── review-pr.md  # Code review with ADO integration
+│   ├── evaluate.md   # Probation evaluation
 │   ├── sprint.md
 │   └── status.md
-│
-├── agents/           # Specialized workers (spawned by skills)
-│   └── ...
 │
 └── install.sh        # Copy skills to ~/.claude/commands/ops/
 ```
@@ -161,13 +165,6 @@ ops/
 3. **Claude for reasoning** - No separate LLM API calls
 4. **Parallel research** - Task() spawns multiple agents simultaneously
 5. **Simple state** - YAML files in `~/.ops/`
-
-### GSD Patterns Applied
-
-- Parallel Task() spawning for faster research
-- Synthesize after parallel completes
-- Brutal assessment (challenge approaches)
-- Web research for best practices
 
 ## Priority Scoring
 
