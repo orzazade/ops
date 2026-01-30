@@ -34,7 +34,7 @@ mcp__azure-devops__wit_my_work_items(project, type: "assignedtome", top: 20)
 mcp__azure-devops__repo_list_pull_requests_by_repo_or_project(project, i_am_reviewer: true)
 ```
 
-## Step 3: Load Overrides
+## Step 3: Load Overrides & Sprint Plan
 
 Check for manual boosts/demotes:
 
@@ -43,6 +43,16 @@ Read ~/.ops/state/overrides.yaml
 ```
 
 Apply any score adjustments from `/ops:boost` or `/ops:demote`.
+
+**Load sprint planned items:**
+```
+sprint_planned_ids = config.sprint_planned.items or []
+```
+
+**Sprint scoring is additive:**
+- Items in current sprint iteration: +10
+- Items in `sprint_planned_ids`: +15 EXTRA (stacks with sprint boost)
+- Total for planned sprint item: +25
 
 ## Step 4: Re-Rank and Compare
 
@@ -75,8 +85,10 @@ Delta: +{N} new | ↑{M} changed | ✓{K} done
 ✓ ~~Completed Item~~ #{id}
 
 ───────────────────────────────────────────────────────────────────
-Legend: 🆕 New | ↑ Changed | ✓ Done
+Legend: 🆕 New | ↑ Changed | ✓ Done | 🎯 Planned
 ───────────────────────────────────────────────────────────────────
+
+**Planned item marker:** Items in `sprint_planned.items` show 🎯 marker to indicate they are sprint commitments.
 ```
 
 </process>

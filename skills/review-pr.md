@@ -42,6 +42,39 @@ mcp__azure-devops__repo_get_pull_request_by_id(
 - If found, fetch work item details (title, description, acceptance criteria)
 - If NO work item linked, ask user for context
 
+## Phase 1b: Check Existing Review Activity
+
+Before starting review, check if you've already reviewed this PR:
+
+```
+mcp__azure-devops__repo_list_pull_request_threads(
+  project: "{project}",
+  repositoryId: "{repo}",
+  pullRequestId: {id}
+)
+```
+
+**Analyze threads to determine status:**
+
+1. **Find your previous comments** - Match author email to your identity
+2. **Find your last comment timestamp** - When did you last post?
+3. **Check for new commits** - Compare PR's lastMergeCommit date vs your last comment
+4. **Check for replies** - Are there replies to your threads after your last comment?
+
+**Display review status:**
+
+| Status | Meaning | Action |
+|--------|---------|--------|
+| 🔴 First Review | No previous comments from you | Full review needed |
+| 🟡 Re-review | New commits/replies since your last comment | Focus on changes since last review |
+| 🟢 Waiting | You commented, no new activity | May not need action |
+
+**If Re-review (🟡):**
+- Show what changed since last review
+- List new commits since your last comment
+- Show any replies to your comments
+- Focus review on the delta, not full PR
+
 ## Phase 2: Get the Code
 
 **Locate repository locally:**
@@ -119,6 +152,35 @@ mcp__azure-devops__repo_create_pull_request_thread(
 ```
 
 **Required:** Always include offset parameters (not 0).
+
+## Phase 7: Set Review Status
+
+After posting comments, remind the user to set their vote status in Azure DevOps:
+
+**Recommended vote based on findings:**
+
+| Findings | Recommended Vote | ADO Status |
+|----------|------------------|------------|
+| Critical issues found | **Reject** | -10 (Rejected) |
+| Medium issues, needs changes | **Wait for Author** | -5 (Waiting for Author) |
+| Minor suggestions only | **Approve with Suggestions** | 5 (Approved with Suggestions) |
+| No issues found | **Approve** | 10 (Approved) |
+
+**Note:** The Azure DevOps MCP doesn't support setting votes programmatically. After posting comments:
+
+1. Display the recommended vote based on severity of findings
+2. Provide the direct link to set vote: `https://dev.azure.com/{org}/{project}/_git/{repo}/pullrequest/{id}`
+3. Remind user: "Set your vote to **{recommended}** to mark as waiting for author"
+
+**Output after posting comments:**
+```
+✅ Posted {N} comments to PR #{id}
+
+📋 Recommended Action: Set vote to "Wait for Author" (-5)
+🔗 Set vote: {PR URL}
+
+Your review is complete. The PR is now waiting for the author to address your comments.
+```
 
 </process>
 
